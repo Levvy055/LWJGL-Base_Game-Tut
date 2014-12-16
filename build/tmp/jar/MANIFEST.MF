@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Main-Class: pl.grm.game.base.GameBase
+Class-Path: guava-18.0.jar commons-lang3-3.3.2.jar lwjgl-2.9.1.jar lwj
+ gl_util-2.9.1.jar ini4j-0.5.2.jar jinput-2.0.6.jar slick_2.11-2.1.0.j
+ ar lwjgl-platform-2.9.1-natives-windows.jar lwjgl-platform-2.9.1-nati
+ ves-linux.jar lwjgl-platform-2.9.1-natives-osx.jar scala-library-2.11
+ .1.jar slf4j-api-1.6.4.jar config-1.2.1.jar jutils-1.0.0.jar jinput-p
+ latform-2.0.6-natives-linux.jar jinput-platform-2.0.6-natives-windows
+ .jar jinput-platform-2.0.6-natives-osx.jar
+

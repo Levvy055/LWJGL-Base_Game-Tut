@@ -1,0 +1,79 @@
+apply plugin: 'java'
+apply plugin: 'pmd'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+apply plugin: 'gradle-one-jar'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
+}
+
+version="0.0.0"
+group="pl.grm"
+description="LWJGL Base Game Model"
+archieveBaseName=""
+mainClassName="pl.grm.game.base.GameBase"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.1'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.9.1'
+    compile group: 'org.ini4j', name: 'ini4j', version: '0.5.2'
+    compile group: 'net.java.jinput', name: 'jinput', version: '2.0.6'
+    compile group: 'com.typesafe.slick', name: 'slick_2.11', version: '2.1.0'
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': mainClassName
+		attributes "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+	}
+}
+
+task execJar(type: OneJar) {
+	mainClass = mainClassName
+	archieveName = archieveBaseName+"-"+version+".jar"
+	binLib = files("libs/native/windows/lwjgl.dll", "libs/native/windows/lwjgl64.dll")
+}
+
+run {
+     systemProperty 'java.library.path', file( 'libs/native/windows' )
+}
+
+pmd {
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  ruleSets = [
+    "basic",
+    "braces"
+  ]
+}
+
+check << {
+  File outDir = new File('build/reports/pmd/')
+  outDir.mkdirs()
+  ant.taskdef(name: 'cpd', classname: 'net.sourceforge.pmd.cpd.CPDTask',
+    classpath: configurations.pmd.asPath)
+  ant.cpd(minimumTokenCount: '100', format: 'xml',
+    outputFile: new File(outDir , 'cpd.xml')) {
+    fileset(dir: "src/main/java") {
+      include(name: '**/*.java')
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
