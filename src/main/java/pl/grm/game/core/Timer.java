@@ -1,4 +1,4 @@
-package pl.grm.game.base;
+package pl.grm.game.core;
 
 import org.lwjgl.*;
 
@@ -51,11 +51,10 @@ public class Timer {
 	}
 	
 	/**
-	 * Calculate the FPS and set it in the title bar
+	 * Calculate the FPS and set it
 	 */
 	public void updateFPS() {
 		if (getTime() - lastFPS > 1000) {
-			System.out.println("FPS: " + getFPS() + " | Delta: " + getDelta());
 			fps = 0;
 			lastFPS += 1000;
 		}

@@ -1,7 +1,11 @@
-package pl.grm.game.base;
+package pl.grm.game.core;
 
 import java.util.*;
 import java.util.logging.*;
+
+import pl.grm.game.core.entities.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.pregamestages.*;
 
 public class GameController {
 	/** Logger to log all msgs and errors */
@@ -24,6 +28,8 @@ public class GameController {
 	private Game				game;
 	/** Stage of game rendering */
 	private GameRenderTypeStage	gameRenderStage;
+	/** Stage based on gameRenderStage */
+	private IGamePreStage			gamePreStage;
 	
 	public GameController(Logger logger) {
 		this.logger = logger;
@@ -111,5 +117,13 @@ public class GameController {
 	
 	public void setGameRenderStage(GameRenderTypeStage gameRenderStage) {
 		this.gameRenderStage = gameRenderStage;
+	}
+	
+	public IGamePreStage getGamePreStage() {
+		return gamePreStage;
+	}
+	
+	public void setGamePreStage(IGamePreStage gameStage) {
+		this.gamePreStage = gameStage;
 	}
 }

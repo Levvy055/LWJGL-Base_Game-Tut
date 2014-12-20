@@ -1,4 +1,4 @@
-package pl.grm.game.base;
+package pl.grm.game.core.config;
 
 /**
  * Parameters of game settings

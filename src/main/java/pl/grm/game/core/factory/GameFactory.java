@@ -1,4 +1,4 @@
-package pl.grm.game.base;
+package pl.grm.game.core.factory;
 
 import java.io.*;
 import java.util.*;
@@ -6,6 +6,13 @@ import java.util.logging.*;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
+
+import pl.grm.game.core.*;
+import pl.grm.game.core.Timer;
+import pl.grm.game.core.config.*;
+import pl.grm.game.core.entities.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.pregamestages.*;
 
 public class GameFactory {
 	
@@ -38,6 +45,7 @@ public class GameFactory {
 		try {
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setTitle(GameParameters.GAME_TITLE);
+			Display.sync(60);
 		}
 		catch (LWJGLException e) {
 			e.printStackTrace();
@@ -52,7 +60,6 @@ public class GameFactory {
 	 */
 	public static GameController createGameController(Logger logger) {
 		GameController gameController = new GameController(logger);
-		gameController.setGameLoop(new GameLoop(gameController));
 		Game game = createGame();
 		gameController.setGame(game);
 		gameController.setEvents(game.getEvents());
@@ -60,6 +67,9 @@ public class GameFactory {
 		gameController.setRenderQueue(game.getRenderQueue());
 		gameController.setTimer(new Timer(gameController));
 		gameController.setIterator(new GameEventIterator(gameController));
+		gameController.setGameLoop(new GameLoop(gameController));
+		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
+		gameController.setGamePreStage(new Menu());
 		return gameController;
 	}
 	
@@ -93,5 +103,24 @@ public class GameFactory {
 	 */
 	public static void startIterator(GameController gameController) {
 		gameController.getIterator().fullIterator();
+	}
+	
+	public static void setLoadingMenu(GameController gameController) {
+		gameController.setGameRenderStage(GameRenderTypeStage.MENU_LOADING);
+		gameController.setGamePreStage(new Menu()); // TODO not menu
+	}
+	
+	public static void setMenu(GameController gameController) {
+		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
+		gameController.setGamePreStage(new Menu());
+	}
+	
+	public static void setLoadingGame(GameController gameController) {
+		gameController.setGameRenderStage(GameRenderTypeStage.GAME_LOADING);
+		gameController.setGamePreStage(new Menu());// TODO not menu
+	}
+	
+	public static void setGame(GameController gameController) {
+		gameController.setGameRenderStage(GameRenderTypeStage.GAME);
 	}
 }

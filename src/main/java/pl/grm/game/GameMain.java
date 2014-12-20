@@ -1,10 +1,12 @@
-package pl.grm.game.base;
+package pl.grm.game;
 
-import static pl.grm.game.base.GameFactory.*;
+import static pl.grm.game.core.factory.GameFactory.*;
 
 import java.util.logging.*;
 
-public class GameBase {
+import pl.grm.game.core.*;
+
+public class GameMain {
 	
 	private static GameController	gameController;
 	private static Logger			logger;

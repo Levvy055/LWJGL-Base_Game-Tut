@@ -1,6 +1,9 @@
-package pl.grm.game.base;
+package pl.grm.game.core;
 
 import java.util.*;
+
+import pl.grm.game.core.entities.*;
+import pl.grm.game.core.events.*;
 
 public class Game {
 	private Queue<GameEvent>	events;

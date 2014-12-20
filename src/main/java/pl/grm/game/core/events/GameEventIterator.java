@@ -1,11 +1,15 @@
-package pl.grm.game.base;
+package pl.grm.game.core.events;
+
+import pl.grm.game.core.*;
 
 public class GameEventIterator {
 	private GameController	gameController;
 	private long			time, tick;
+	private Timer			timer;
 	
 	public GameEventIterator(GameController gameController) {
 		this.gameController = gameController;
+		this.timer = gameController.getTimer();
 	}
 	
 	/**
@@ -18,7 +22,8 @@ public class GameEventIterator {
 			if (time % 10 == 0) {
 				tick++;
 			}
-			System.out.println("Time = " + time + " | Tick = " + tick);
+			System.out.print("Time = " + time + " | Tick = " + tick);
+			System.out.print(" | FPS: " + timer.getFPS() + " | Delta: " + timer.getDelta() + "\n");
 			try {
 				this.wait(500l);
 			}

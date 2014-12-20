@@ -1,41 +1,46 @@
-package pl.grm.game.base;
-
-import static org.lwjgl.opengl.GL11.*;
+package pl.grm.game.core;
 
 import java.util.logging.*;
 
 import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
+import pl.grm.game.core.config.*;
+import pl.grm.game.core.pregamestages.*;
+
 public class GameLoop extends Thread {
 	private GameController	gameController;
 	private Logger			logger;
+	private Timer			timer;
 	
 	public GameLoop(GameController gameController) {
 		super(GameParameters.GAME_TITLE + " Main-Game-Loop");
 		this.gameController = gameController;
 		this.logger = gameController.getLogger();
+		this.timer = gameController.getTimer();
 	}
 	
 	@Override
 	public void run() {
 		initLoop();
 		
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 		while (!Display.isCloseRequested()) {
-			glPushMatrix();
-			glBegin(GL_QUADS);
-			glVertex2f(0, 0);
-			glVertex2f(0, 64);
-			glVertex2f(64, 64);
-			glVertex2f(64, 0);
-			glEnd();
-			glPopMatrix();
-			
+			switch (gameController.getGameRenderStage()) {
+				case MENU :
+					renderMaenu();
+					break;
+				default :
+					break;
+			}
+			timer.updateFPS();
 			Display.update();
 		}
 		closeGame();
+	}
+	
+	private void renderMaenu() {
+		Menu menu = (Menu) gameController.getGamePreStage();
+		menu.render();
 	}
 	
 	/**
@@ -50,6 +55,7 @@ public class GameLoop extends Thread {
 	 * Called before loop
 	 */
 	private void initLoop() {
+		timer.initTime();
 		try {
 			Display.create();
 		}
