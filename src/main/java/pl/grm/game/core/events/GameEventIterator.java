@@ -1,15 +1,14 @@
 package pl.grm.game.core.events;
 
 import pl.grm.game.core.*;
+import pl.grm.game.core.entities.*;
 
 public class GameEventIterator {
-	private GameController	gameController;
-	private long			time, tick;
-	private Timer			timer;
+	private long	time, tick;
+	private Timer	timer;
 	
-	public GameEventIterator(GameController gameController) {
-		this.gameController = gameController;
-		this.timer = gameController.getTimer();
+	public GameEventIterator() {
+		this.timer = GameController.instance.getTimer();
 	}
 	
 	/**
@@ -17,18 +16,23 @@ public class GameEventIterator {
 	 */
 	public synchronized void fullIterator() {
 		time = 0l;
-		while (gameController.isRunning()) {
+		while (GameController.instance.isRunning()) {
 			time++;
 			if (time % 10 == 0) {
 				tick++;
 			}
-			System.out.print("Time = " + time + " | Tick = " + tick);
-			System.out.print(" | FPS: " + timer.getFPS() + " | Delta: " + timer.getDelta() + "\n");
+			// System.out.print("Time = " + time + " | Tick = " + tick);
+			// System.out.print(" | FPS: " + timer.getFPS() + " | Delta: " +
+			// timer.getDelta() + "\n");
 			try {
 				this.wait(500l);
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			if (time == 5) {
+				Rectangle rec = new Rectangle(30, 40);
+				GameController.addEntity(rec);
 			}
 		}
 	}

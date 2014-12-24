@@ -1,78 +1,58 @@
 package pl.grm.game.core;
 
 import java.util.*;
-import java.util.logging.*;
 
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
+import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
 
 public class GameController {
-	/** Logger to log all msgs and errors */
-	private Logger				logger;
 	/** Game main Loop of rendering things on screen */
-	private GameLoop			gameLoop;
-	/** Queue of events */
-	private Queue<GameEvent>	events;
-	/** List of existing entities */
-	private ArrayList<Entity>	entities;
-	/** Queue of rendering things on screen */
-	private Queue<Entity>		renderQueue;
+	private RenderThread				gameLoop;
 	/** Iterator which iterates over events */
-	private GameEventIterator	iterator;
+	private GameEventIterator			iterator;
 	/** Specifies that game is running or not */
-	private boolean				running;
+	private boolean						running;
 	/** Timer to count game FPS and Delta */
-	private Timer				timer;
+	private Timer						timer;
 	/** The Game Container */
-	private Game				game;
+	private Game						game;
 	/** Stage of game rendering */
-	private GameRenderTypeStage	gameRenderStage;
+	private GameRenderTypeStage			gameRenderStage;
 	/** Stage based on gameRenderStage */
-	private IGamePreStage			gamePreStage;
+	private IGamePreStage				gamePreStage;
+	/** Map of keyboard listener */
+	private Map<Integer, KeyListener>	listenerMap;
+	/** Instance of GameController to control all game components */
+	public static GameController		instance;
 	
-	public GameController(Logger logger) {
-		this.logger = logger;
+	public static void addEntity(Entity entity) {
+		instance.game.addEntity(entity);
 	}
 	
-	public Logger getLogger() {
-		return logger;
+	public void stopGame() {
+		setRunning(false);
 	}
 	
-	public void setLogger(Logger logger) {
-		this.logger = logger;
-	}
-	
-	public GameLoop getGameLoop() {
+	public RenderThread getGameLoop() {
 		return gameLoop;
 	}
 	
-	public void setGameLoop(GameLoop loop) {
+	public void setGameLoop(RenderThread loop) {
 		this.gameLoop = loop;
 	}
 	
 	public Queue<GameEvent> getEvents() {
-		return events;
-	}
-	
-	public void setEvents(Queue<GameEvent> events) {
-		this.events = events;
+		return game.getEvents();
 	}
 	
 	public ArrayList<Entity> getEntities() {
-		return entities;
-	}
-	
-	public void setEntities(ArrayList<Entity> entities) {
-		this.entities = entities;
+		return game.getEntities();
 	}
 	
 	public Queue<Entity> getRenderQueue() {
-		return renderQueue;
-	}
-	
-	public void setRenderQueue(Queue<Entity> renderQueue) {
-		this.renderQueue = renderQueue;
+		return game.getRenderQueue();
 	}
 	
 	public GameEventIterator getIterator() {
@@ -81,10 +61,6 @@ public class GameController {
 	
 	public void setIterator(GameEventIterator iterator) {
 		this.iterator = iterator;
-	}
-	
-	public void stopGame() {
-		setRunning(false);
 	}
 	
 	public boolean isRunning() {
@@ -125,5 +101,13 @@ public class GameController {
 	
 	public void setGamePreStage(IGamePreStage gameStage) {
 		this.gamePreStage = gameStage;
+	}
+	
+	public Map<Integer, KeyListener> getListenerMap() {
+		return listenerMap;
+	}
+	
+	public void setListenerMap(Map<Integer, KeyListener> listenerMap) {
+		this.listenerMap = listenerMap;
 	}
 }

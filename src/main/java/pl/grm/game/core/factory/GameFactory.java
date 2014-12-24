@@ -12,6 +12,7 @@ import pl.grm.game.core.Timer;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
+import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
 
 public class GameFactory {
@@ -45,7 +46,6 @@ public class GameFactory {
 		try {
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setTitle(GameParameters.GAME_TITLE);
-			Display.sync(60);
 		}
 		catch (LWJGLException e) {
 			e.printStackTrace();
@@ -55,21 +55,19 @@ public class GameFactory {
 	/**
 	 * Creates GameController and sets all of its params
 	 * 
-	 * @param logger
 	 * @return GameController
 	 */
-	public static GameController createGameController(Logger logger) {
-		GameController gameController = new GameController(logger);
+	public static GameController createGameController() {
+		GameController.instance = new GameController();
+		GameController gameController = GameController.instance;
 		Game game = createGame();
 		gameController.setGame(game);
-		gameController.setEvents(game.getEvents());
-		gameController.setEntities(game.getEntities());
-		gameController.setRenderQueue(game.getRenderQueue());
 		gameController.setTimer(new Timer(gameController));
-		gameController.setIterator(new GameEventIterator(gameController));
-		gameController.setGameLoop(new GameLoop(gameController));
+		gameController.setIterator(new GameEventIterator());
+		gameController.setGameLoop(new RenderThread());
 		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
 		gameController.setGamePreStage(new Menu());
+		gameController.setListenerMap(new HashMap<Integer, KeyListener>());
 		return gameController;
 	}
 	

@@ -6,12 +6,19 @@ import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 
 public class Game {
+	/** Queue of events */
 	private Queue<GameEvent>	events;
+	/** List of existing entities */
 	private ArrayList<Entity>	entities;
+	/** Queue of rendering things on screen */
 	private Queue<Entity>		renderQueue;
 	
 	public Game() {
 		
+	}
+	
+	public void addEntity(Entity entity) {
+		entities.add(entity);
 	}
 	
 	public Queue<GameEvent> getEvents() {
