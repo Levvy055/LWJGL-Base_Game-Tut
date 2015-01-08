@@ -16,7 +16,7 @@ buildscript {
 version="0.0.0"
 group="pl.grm"
 description="LWJGL Base Game Model"
-archieveBaseName="GameTut"
+def archieveFileName="GameTut"
 mainClassName="pl.grm.game.base.GameBase"
 
 repositories {
@@ -43,7 +43,7 @@ jar {
 
 task execJar(type: OneJar) {
 	mainClass = mainClassName
-	archieveName = archieveBaseName+"-"+version+".jar"
+	def archieveName = archieveFileName+"-"+version+".jar"
 	binLib = files("libs/native/windows/lwjgl.dll", "libs/native/windows/lwjgl64.dll")
 }
 
@@ -56,8 +56,8 @@ pmd {
   sourceSets = [sourceSets.main]
   reportsDir = file("$project.buildDir/reports/pmd")
   ruleSets = [
-    "basic",
-    "braces"
+    "java-basic",
+    "java-braces"
   ]
 }
 
@@ -75,5 +75,5 @@ check << {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.2.1'
 }
