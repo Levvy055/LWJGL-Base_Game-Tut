@@ -10,4 +10,11 @@ public interface Entity {
 	 * Render functions of drawing entity
 	 */
 	public void render();
+	
+	/**
+	 * Returns Name of Entity
+	 * 
+	 * @return name of entity
+	 */
+	public String getName();
 }

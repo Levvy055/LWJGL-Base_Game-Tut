@@ -31,7 +31,7 @@ public class GameEventIterator {
 				e.printStackTrace();
 			}
 			if (time == 5) {
-				Rectangle rec = new Rectangle(30, 40);
+				Rectangle rec = new Rectangle(0, 0);
 				GameController.addEntity(rec);
 			}
 		}

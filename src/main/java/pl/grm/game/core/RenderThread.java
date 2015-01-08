@@ -40,9 +40,11 @@ public class RenderThread extends Thread {
 			default :
 				break;
 		}
+		
 		for (Entity entity : entities) {
 			entity.render();
 		}
+		
 		timer.updateFPS();
 		Display.update();
 		Display.sync(GameParameters.FPS);
