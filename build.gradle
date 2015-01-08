@@ -16,7 +16,7 @@ buildscript {
 version="0.0.0"
 group="pl.grm"
 description="LWJGL Base Game Model"
-archieveBaseName=""
+archieveBaseName="GameTut"
 mainClassName="pl.grm.game.base.GameBase"
 
 repositories {
