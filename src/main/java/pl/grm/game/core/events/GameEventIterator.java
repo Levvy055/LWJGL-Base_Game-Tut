@@ -34,6 +34,10 @@ public class GameEventIterator {
 				Rectangle rec = new Rectangle(0, 0);
 				GameController.addEntity(rec);
 			}
+			if (time == 10) {
+				Rectangle rec = new Rectangle(15, 20, 120, 60, 0.1f, 0.3f, 0.1f);
+				GameController.addEntity(rec);
+			}
 		}
 	}
 }

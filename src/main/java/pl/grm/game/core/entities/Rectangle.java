@@ -17,7 +17,7 @@ public class Rectangle implements Entity {
 	}
 	
 	public Rectangle(float x, float y, float width, float height) {
-		this(x, y, width, height, 200, 10, 10);
+		this(x, y, width, height, 0.5f, 0.5f, 1f);
 	}
 	
 	public Rectangle(float x, float y, float width, float height, float red, float green, float blue) {
@@ -33,8 +33,6 @@ public class Rectangle implements Entity {
 	
 	@Override
 	public void render() {
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 		glPushMatrix();
 		glColor3f(red, green, blue);
 		glBegin(GL_QUADS);

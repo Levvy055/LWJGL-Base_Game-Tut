@@ -32,7 +32,7 @@ public class RenderThread extends Thread {
 	}
 	
 	private void loop() {
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		switch (GameController.instance.getGameRenderStage()) {
 			case MENU :
 				renderMenu();
@@ -76,5 +76,9 @@ public class RenderThread extends Thread {
 		catch (LWJGLException e) {
 			GameLogger.log(Level.SEVERE, e.toString(), e);
 		}
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, 800, 0, 600, 1, -1);
+		glMatrixMode(GL11.GL_MODELVIEW);
 	}
 }
