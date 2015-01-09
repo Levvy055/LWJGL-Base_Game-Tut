@@ -85,9 +85,10 @@ public class GameFactory {
 	private static Game createGame() {
 		Game game = new Game();
 		game.setEvents(new PriorityQueue<GameEvent>());
-		Multimap<Integer, Entity> entityMap = ArrayListMultimap.create();
+		HashMultimap<Integer, Entity> entityMap = HashMultimap.create();
 		game.setEntities(entityMap);
-		game.setRenderQueue(new PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
+		// efgame.setRenderQueue(new
+		// PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
 		return game;
 	}
 	
@@ -99,14 +100,6 @@ public class GameFactory {
 	public static void startGame(GameController gameController) {
 		gameController.setRunning(true);
 		gameController.getGameLoop().start();
-	}
-	
-	/**
-	 * Starts iterator over game Events
-	 * 
-	 * @param gameController
-	 */
-	public static void startIterator(GameController gameController) {
 		gameController.getIterator().fullIterator();
 	}
 	

@@ -9,11 +9,11 @@ import com.google.common.collect.*;
 
 public class Game {
 	/** Queue of events */
-	private Queue<GameEvent>			events;
+	private Queue<GameEvent>				events;
 	/** List of existing entities */
-	private Multimap<Integer, Entity>	entities;
+	private HashMultimap<Integer, Entity>	entities;
 	/** Queue of rendering things on screen */
-	private Queue<Entity>				renderQueue;
+	private Queue<Entity>					renderQueue;
 	
 	public Game() {
 		
@@ -23,7 +23,6 @@ public class Game {
 		entities.put(entity.getID(), entity);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void destroyAllEntities(int id) {
 		entities.removeAll(id);
 	}
@@ -36,11 +35,11 @@ public class Game {
 		this.events = events;
 	}
 	
-	public Multimap<Integer, Entity> getEntities() {
-		return this.entities;
+	public synchronized Multimap<Integer, Entity> getEntities() {
+		return Multimaps.synchronizedMultimap(this.entities);
 	}
 	
-	public void setEntities(Multimap<Integer, Entity> entities) {
+	public void setEntities(HashMultimap<Integer, Entity> entities) {
 		this.entities = entities;
 	}
 	

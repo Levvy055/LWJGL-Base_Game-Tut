@@ -34,7 +34,6 @@ public class RenderThread extends Thread {
 		closeGame();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void loop() {
 		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
@@ -47,19 +46,23 @@ public class RenderThread extends Thread {
 		}
 		renderEntities();
 		
-		timer.updateFPS();
 		Display.update();
+		timer.updateFPS();
 		Display.sync(GameParameters.FPS);
 	}
 	
 	private void renderEntities() {
 		Set<Integer> keySet = entities.keySet();
-		Iterator<Integer> iterator = keySet.iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
+		Iterator<Integer> keySetIterator = keySet.iterator();
+		while (keySetIterator.hasNext()) {
+			Integer key = keySetIterator.next();
 			Collection<Entity> entityCollection = entities.get(key);
-			for (Entity entity : entityCollection) {
-				entity.render();
+			Iterator<Entity> entityCollectionIterator = entityCollection.iterator();
+			synchronized (entityCollectionIterator) {
+				while (entityCollectionIterator.hasNext()) {
+					Entity entity = entityCollectionIterator.next();
+					entity.render();
+				}
 			}
 		}
 	}
@@ -81,9 +84,9 @@ public class RenderThread extends Thread {
 	 * Called before loop
 	 */
 	private void initLoop() {
-		timer.initTime();
-		renderQueue = GameController.instance.getGame().getRenderQueue();
-		entities = GameController.instance.getGame().getEntities();
+		this.timer.initTime();
+		this.renderQueue = GameController.instance.getGame().getRenderQueue();
+		this.entities = GameController.instance.getGame().getEntities();
 		try {
 			Display.create();
 		}

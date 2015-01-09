@@ -1,30 +1,34 @@
 package pl.grm.game.core.inputs;
 
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.*;
+
 import org.lwjgl.input.*;
 
-import pl.grm.game.core.*;
-import pl.grm.game.core.entities.*;
-
 public class KeyManager {
+	private static ConcurrentHashMap<Integer, KeyListener>	keyListeners	= new ConcurrentHashMap<Integer, KeyListener>();
 	
 	public static void keyActionPerformer() {
 		if (!Keyboard.isCreated()) { return; }
-		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-			Rectangle rec = new Rectangle(0, 0);
-			GameController.addEntity(rec);
-		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-			Rectangle rec = new Rectangle(15, 20, 120, 60, 0.1f, 0.3f, 0.1f);
-			GameController.addEntity(rec);
-		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-			GameController.destroyAllEntities(1);
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			GameController.instance.stopGame();
+		Iterator<Entry<Integer, KeyListener>> iterator = keyListeners.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<Integer, KeyListener> listenerEntry = iterator.next();
+			if (Keyboard.isKeyDown(listenerEntry.getKey())) {
+				listenerEntry.getValue().actionPerformed();
+			}
 		}
 	}
 	
+	public static void addKeyListener(int key, KeyListener keyListener) {
+		keyListeners.put(key, keyListener);
+	}
+	
+	public static boolean containsListener(int key) {
+		return keyListeners.containsKey(key);
+	}
+	
+	public static void removeListener(int key) {
+		keyListeners.remove(key);
+	}
 }

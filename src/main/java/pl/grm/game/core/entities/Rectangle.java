@@ -48,7 +48,6 @@ public class Rectangle implements Entity {
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
 		
 	}
 	

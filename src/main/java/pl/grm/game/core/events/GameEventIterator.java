@@ -14,8 +14,8 @@ public class GameEventIterator {
 	/**
 	 * Iterates over every event
 	 */
-	@SuppressWarnings("unchecked")
 	public synchronized void fullIterator() {
+		Thread.currentThread().setName("Game Logic");
 		timer.initTime(GameParameters.TPS);
 		while (GameController.instance.isRunning()) {
 			timer.updateTPS();
@@ -23,7 +23,7 @@ public class GameEventIterator {
 			KeyManager.keyActionPerformer();
 			
 			updateEntities();
-			
+			System.out.println(GameController.instance.getEntities().size());
 			timer.sync();
 		}
 	}
