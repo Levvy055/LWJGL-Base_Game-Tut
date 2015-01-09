@@ -3,14 +3,15 @@ package pl.grm.game.core.entities;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Rectangle implements Entity {
-	private float	blue;
-	private float	green;
-	private float	red;
-	private float	x;
-	private float	y;
-	private float	width;
-	private float	height;
-	private String	name;
+	private static int	ID;
+	private float		blue;
+	private float		green;
+	private float		red;
+	private float		x;
+	private float		y;
+	private float		width;
+	private float		height;
+	private String		name;
 	
 	public Rectangle(float x, float y) {
 		this(x, y, 64, 64);
@@ -29,6 +30,7 @@ public class Rectangle implements Entity {
 		this.green = green;
 		this.blue = blue;
 		this.name = "Rectangle";
+		ID = 1;
 	}
 	
 	@Override
@@ -55,4 +57,7 @@ public class Rectangle implements Entity {
 		return name;
 	}
 	
+	public static int getID() {
+		return ID;
+	}
 }

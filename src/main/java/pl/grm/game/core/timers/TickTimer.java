@@ -19,7 +19,6 @@ public class TickTimer {
 	public void updateTPS() {
 		long currentTime = getTime();
 		if (currentTime - lastCallTime > 1000) {
-			System.out.println("TPS: " + getTPS() + " | " + getDelta() + " | " + currentTime);
 			lastTPS = tpsT;
 			tpsT = 0;
 			lastCallTime += 1000;

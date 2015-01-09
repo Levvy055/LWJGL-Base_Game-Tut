@@ -16,7 +16,7 @@ public class GameController {
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
-	private FPSTimer						fpsTimer;
+	private FPSTimer					fpsTimer;
 	/** The Game Container */
 	private Game						game;
 	/** Stage of game rendering */
@@ -30,6 +30,10 @@ public class GameController {
 	
 	public static void addEntity(Entity entity) {
 		instance.game.addEntity(entity);
+	}
+	
+	public static void destroyAllEntities(int id) {
+		instance.game.destroyAllEntities(id);
 	}
 	
 	public void stopGame() {

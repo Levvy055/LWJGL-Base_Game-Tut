@@ -21,6 +21,10 @@ public class Game {
 		entities.add(entity);
 	}
 	
+	public void destroyAllEntities(int id) {
+		
+	}
+	
 	public Queue<GameEvent> getEvents() {
 		return this.events;
 	}

@@ -14,7 +14,7 @@ import pl.grm.game.core.pregamestages.*;
 import pl.grm.game.core.timers.*;
 
 public class RenderThread extends Thread {
-	private FPSTimer				timer;
+	private FPSTimer			timer;
 	private Queue<Entity>		renderQueue;
 	private ArrayList<Entity>	entities;
 	
@@ -32,6 +32,7 @@ public class RenderThread extends Thread {
 		closeGame();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void loop() {
 		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
@@ -43,13 +44,11 @@ public class RenderThread extends Thread {
 				break;
 		}
 		
-		for (Entity entity : entities) {
+		for (Entity entity : (ArrayList<Entity>) entities.clone()) {
 			entity.render();
 		}
 		
 		timer.updateFPS();
-		// if (timer.getFPS() == timer.getFpsDisplay())
-		// System.out.println("FPS: " + timer.getFpsDisplay());
 		Display.update();
 		Display.sync(GameParameters.FPS);
 	}
