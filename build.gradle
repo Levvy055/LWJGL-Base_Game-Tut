@@ -16,8 +16,8 @@ buildscript {
 version="0.0.0"
 group="pl.grm"
 description="LWJGL Base Game Model"
-def archieveFileName="GameTut"
-mainClassName="pl.grm.game.base.GameBase"
+def archieveFileName="LWJGL Tut Game"
+mainClassName="pl.grm.game.GameMain"
 
 repositories {
     mavenCentral()
@@ -43,7 +43,7 @@ jar {
 
 task execJar(type: OneJar) {
 	mainClass = mainClassName
-	def archieveName = archieveFileName+"-"+version+".jar"
+	archiveName = archieveFileName+"-"+version+".jar"
 	binLib = files("libs/native/windows/lwjgl.dll", "libs/native/windows/lwjgl64.dll")
 }
 
