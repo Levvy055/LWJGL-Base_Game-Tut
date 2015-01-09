@@ -9,11 +9,13 @@ public class GameLogger {
 	private static Logger	logger;
 	
 	public static void info(String msg) {
-		logger.info(msg);
+		if (logger != null)
+			logger.info(msg);
 	}
 	
 	public static void log(Level level, String msg, Throwable thrown) {
-		logger.log(level, msg, thrown);
+		if (logger != null)
+			logger.log(level, msg, thrown);
 	}
 	
 	public static void setLogger(Logger logger) {

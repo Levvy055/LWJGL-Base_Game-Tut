@@ -1,43 +1,30 @@
 package pl.grm.game.core.events;
 
 import pl.grm.game.core.*;
+import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
+import pl.grm.game.core.timers.*;
 
 public class GameEventIterator {
-	private long	time, tick;
-	private Timer	timer;
-	
-	public GameEventIterator() {
-		this.timer = GameController.instance.getTimer();
-	}
+	private long		gameTickTime;
+	private TickTimer	timer	= new TickTimer();
 	
 	/**
 	 * Iterates over every event
 	 */
 	public synchronized void fullIterator() {
-		time = 0l;
+		timer.initTime(GameParameters.TPS);
 		while (GameController.instance.isRunning()) {
-			time++;
-			if (time % 10 == 0) {
-				tick++;
-			}
-			// System.out.print("Time = " + time + " | Tick = " + tick);
-			// System.out.print(" | FPS: " + timer.getFPS() + " | Delta: " +
-			// timer.getDelta() + "\n");
-			try {
-				this.wait(500l);
-			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (time == 5) {
+			if (gameTickTime == 5) {
 				Rectangle rec = new Rectangle(0, 0);
 				GameController.addEntity(rec);
 			}
-			if (time == 10) {
+			if (gameTickTime == 10) {
 				Rectangle rec = new Rectangle(15, 20, 120, 60, 0.1f, 0.3f, 0.1f);
 				GameController.addEntity(rec);
 			}
+			timer.updateTPS();
+			timer.sync();
 		}
 	}
 }

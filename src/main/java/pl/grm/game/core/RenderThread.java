@@ -11,15 +11,16 @@ import org.lwjgl.opengl.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.timers.*;
 
 public class RenderThread extends Thread {
-	private Timer				timer;
+	private FPSTimer				timer;
 	private Queue<Entity>		renderQueue;
 	private ArrayList<Entity>	entities;
 	
 	public RenderThread() {
 		super(GameParameters.GAME_TITLE + " Game-Render-Loop");
-		this.timer = GameController.instance.getTimer();
+		this.timer = GameController.instance.getFPSTimer();
 	}
 	
 	@Override
@@ -33,6 +34,7 @@ public class RenderThread extends Thread {
 	
 	private void loop() {
 		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
 		switch (GameController.instance.getGameRenderStage()) {
 			case MENU :
 				renderMenu();
@@ -46,6 +48,8 @@ public class RenderThread extends Thread {
 		}
 		
 		timer.updateFPS();
+		// if (timer.getFPS() == timer.getFpsDisplay())
+		// System.out.println("FPS: " + timer.getFpsDisplay());
 		Display.update();
 		Display.sync(GameParameters.FPS);
 	}

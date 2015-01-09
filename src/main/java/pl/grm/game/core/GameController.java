@@ -6,6 +6,7 @@ import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.timers.*;
 
 public class GameController {
 	/** Game main Loop of rendering things on screen */
@@ -15,7 +16,7 @@ public class GameController {
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
-	private Timer						timer;
+	private FPSTimer						fpsTimer;
 	/** The Game Container */
 	private Game						game;
 	/** Stage of game rendering */
@@ -71,12 +72,12 @@ public class GameController {
 		this.running = running;
 	}
 	
-	public Timer getTimer() {
-		return timer;
+	public FPSTimer getFPSTimer() {
+		return fpsTimer;
 	}
 	
-	public void setTimer(Timer timer) {
-		this.timer = timer;
+	public void setFPSTimer(FPSTimer fpsTimer) {
+		this.fpsTimer = fpsTimer;
 	}
 	
 	public Game getGame() {

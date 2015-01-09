@@ -9,7 +9,7 @@ public class GameMain {
 	
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Main");
-		GameLogger.setLogger(setupLogger());
+		// GameLogger.setLogger(setupLogger());
 		gameController = createGameController();
 		initDisplay();
 		startGame(gameController);

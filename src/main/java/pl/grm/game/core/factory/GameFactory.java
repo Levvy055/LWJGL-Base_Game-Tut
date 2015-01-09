@@ -8,12 +8,12 @@ import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
 import pl.grm.game.core.*;
-import pl.grm.game.core.Timer;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.timers.*;
 
 public class GameFactory {
 	
@@ -66,7 +66,7 @@ public class GameFactory {
 		GameController gameController = GameController.instance;
 		Game game = createGame();
 		gameController.setGame(game);
-		gameController.setTimer(new Timer(gameController));
+		gameController.setFPSTimer(new FPSTimer());
 		gameController.setIterator(new GameEventIterator());
 		gameController.setGameLoop(new RenderThread());
 		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
