@@ -22,11 +22,21 @@ public class GameEventIterator {
 			
 			KeyManager.keyActionPerformer();
 			
-			for (Entity entity : (ArrayList<Entity>) GameController.instance.getEntities().clone()) {
-				entity.update();
-			}
+			updateEntities();
 			
 			timer.sync();
+		}
+	}
+	
+	private void updateEntities() {
+		Set<Integer> keySet = GameController.instance.getEntities().keySet();
+		Iterator<Integer> iterator = keySet.iterator();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+			Collection<Entity> entityCollection = GameController.instance.getEntities().get(key);
+			for (Entity entity : entityCollection) {
+				entity.update();
+			}
 		}
 	}
 }

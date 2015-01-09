@@ -8,6 +8,7 @@ import pl.grm.game.core.entities.*;
 public class KeyManager {
 	
 	public static void keyActionPerformer() {
+		if (!Keyboard.isCreated()) { return; }
 		if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
 			Rectangle rec = new Rectangle(0, 0);
 			GameController.addEntity(rec);
@@ -19,7 +20,10 @@ public class KeyManager {
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_U)) {
-			GameController.destroyAllEntities(Rectangle.getID());
+			GameController.destroyAllEntities(1);
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			GameController.instance.stopGame();
 		}
 	}
 	

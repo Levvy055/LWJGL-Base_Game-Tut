@@ -13,10 +13,12 @@ import pl.grm.game.core.entities.*;
 import pl.grm.game.core.pregamestages.*;
 import pl.grm.game.core.timers.*;
 
+import com.google.common.collect.*;
+
 public class RenderThread extends Thread {
-	private FPSTimer			timer;
-	private Queue<Entity>		renderQueue;
-	private ArrayList<Entity>	entities;
+	private FPSTimer					timer;
+	private Queue<Entity>				renderQueue;
+	private Multimap<Integer, Entity>	entities;
 	
 	public RenderThread() {
 		super(GameParameters.GAME_TITLE + " Game-Render-Loop");
@@ -26,7 +28,7 @@ public class RenderThread extends Thread {
 	@Override
 	public void run() {
 		initLoop();
-		while (!Display.isCloseRequested()) {
+		while (!Display.isCloseRequested() && GameController.instance.isRunning()) {
 			loop();
 		}
 		closeGame();
@@ -43,14 +45,23 @@ public class RenderThread extends Thread {
 			default :
 				break;
 		}
-		
-		for (Entity entity : (ArrayList<Entity>) entities.clone()) {
-			entity.render();
-		}
+		renderEntities();
 		
 		timer.updateFPS();
 		Display.update();
 		Display.sync(GameParameters.FPS);
+	}
+	
+	private void renderEntities() {
+		Set<Integer> keySet = entities.keySet();
+		Iterator<Integer> iterator = keySet.iterator();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+			Collection<Entity> entityCollection = entities.get(key);
+			for (Entity entity : entityCollection) {
+				entity.render();
+			}
+		}
 	}
 	
 	private void renderMenu() {

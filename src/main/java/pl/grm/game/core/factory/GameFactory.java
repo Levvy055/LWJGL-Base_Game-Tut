@@ -15,6 +15,8 @@ import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
 import pl.grm.game.core.timers.*;
 
+import com.google.common.collect.*;
+
 public class GameFactory {
 	
 	/**
@@ -83,7 +85,8 @@ public class GameFactory {
 	private static Game createGame() {
 		Game game = new Game();
 		game.setEvents(new PriorityQueue<GameEvent>());
-		game.setEntities(new ArrayList<Entity>());
+		Multimap<Integer, Entity> entityMap = ArrayListMultimap.create();
+		game.setEntities(entityMap);
 		game.setRenderQueue(new PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
 		return game;
 	}

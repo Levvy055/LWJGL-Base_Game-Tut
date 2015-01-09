@@ -17,4 +17,11 @@ public interface Entity {
 	 * @return name of entity
 	 */
 	public String getName();
+	
+	/**
+	 * Gets ID of entity
+	 * 
+	 * @return entity ID
+	 */
+	public int getID();
 }

@@ -8,6 +8,8 @@ import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.pregamestages.*;
 import pl.grm.game.core.timers.*;
 
+import com.google.common.collect.*;
+
 public class GameController {
 	/** Game main Loop of rendering things on screen */
 	private RenderThread				gameLoop;
@@ -52,7 +54,7 @@ public class GameController {
 		return game.getEvents();
 	}
 	
-	public ArrayList<Entity> getEntities() {
+	public Multimap<Integer, Entity> getEntities() {
 		return game.getEntities();
 	}
 	

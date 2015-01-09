@@ -5,24 +5,27 @@ import java.util.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 
+import com.google.common.collect.*;
+
 public class Game {
 	/** Queue of events */
-	private Queue<GameEvent>	events;
+	private Queue<GameEvent>			events;
 	/** List of existing entities */
-	private ArrayList<Entity>	entities;
+	private Multimap<Integer, Entity>	entities;
 	/** Queue of rendering things on screen */
-	private Queue<Entity>		renderQueue;
+	private Queue<Entity>				renderQueue;
 	
 	public Game() {
 		
 	}
 	
 	public void addEntity(Entity entity) {
-		entities.add(entity);
+		entities.put(entity.getID(), entity);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void destroyAllEntities(int id) {
-		
+		entities.removeAll(id);
 	}
 	
 	public Queue<GameEvent> getEvents() {
@@ -33,11 +36,11 @@ public class Game {
 		this.events = events;
 	}
 	
-	public ArrayList<Entity> getEntities() {
+	public Multimap<Integer, Entity> getEntities() {
 		return this.entities;
 	}
 	
-	public void setEntities(ArrayList<Entity> entities) {
+	public void setEntities(Multimap<Integer, Entity> entities) {
 		this.entities = entities;
 	}
 	
