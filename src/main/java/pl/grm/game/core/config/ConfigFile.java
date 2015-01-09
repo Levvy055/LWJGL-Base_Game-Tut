@@ -5,11 +5,17 @@ import java.io.*;
 import org.ini4j.*;
 
 import pl.grm.game.core.*;
+import pl.grm.game.core.inputs.*;
 
 public class ConfigFile {
 	
 	public static void loadDefaults() {
-		
+		for (GameProperties property : GameProperties.values()) {
+			if (property.getCategory().equals("Keys")) {
+				float value = property.getfValue();
+				KeyManager.addKeyListener((int) value, DefaultListeners.getListener((int) value));
+			}
+		}
 	}
 	
 	public static void loadConfigFromFile() {
@@ -57,5 +63,6 @@ public class ConfigFile {
 			}
 			ini.put(category, name, value);
 		}
+		ini.store();
 	}
 }

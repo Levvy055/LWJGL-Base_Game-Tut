@@ -3,8 +3,12 @@ package pl.grm.game.core.config;
 public enum GameProperties {
 	KEY_ESC(
 			"Keys",
-			"Key ESC",
-			0);
+			"Close Game",
+			0x01) ,
+	LAST_PLAYER_NAME(
+			"Player",
+			"Last Player Name",
+			"Player");
 	
 	private String	category;
 	private String	name;
