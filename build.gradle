@@ -27,8 +27,8 @@ repositories {
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.3.2'
-    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.1'
-    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.9.1'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.2'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.9.2'
     compile group: 'org.ini4j', name: 'ini4j', version: '0.5.2'
     compile group: 'net.java.jinput', name: 'jinput', version: '2.0.6'
     compile group: 'com.typesafe.slick', name: 'slick_2.11', version: '2.1.0'

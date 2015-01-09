@@ -2,6 +2,8 @@ package pl.grm.game.core.events;
 
 import java.util.*;
 
+import org.lwjgl.input.*;
+
 import pl.grm.game.core.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
@@ -19,7 +21,14 @@ public class GameEventIterator {
 		timer.initTime(GameParameters.TPS);
 		while (GameController.instance.isRunning()) {
 			timer.updateTPS();
-			
+			if (Keyboard.isCreated() && Keyboard.isKeyDown(Keyboard.KEY_T)) {
+				KeyManager.addKeyListener(Keyboard.KEY_G, new KeyListener() {
+					@Override
+					public void actionPerformed() {
+						GameController.instance.getEntities().put(1, new Circle(50, 50, 50));
+					}
+				});
+			}
 			KeyManager.keyActionPerformer();
 			
 			updateEntities();

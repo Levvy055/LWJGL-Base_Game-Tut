@@ -99,7 +99,9 @@ public class GameFactory {
 	 */
 	public static void startGame(GameController gameController) {
 		gameController.setRunning(true);
+		ConfigFile.loadDefaults();
 		gameController.getGameLoop().start();
+		ConfigFile.loadConfigFromFile();
 		gameController.getIterator().fullIterator();
 	}
 	

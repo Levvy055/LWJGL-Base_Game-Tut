@@ -18,6 +18,10 @@ public class GameLogger {
 			logger.log(level, msg, thrown);
 	}
 	
+	public static void logException(Exception e) {
+		log(Level.SEVERE, e.getMessage(), e);
+	}
+	
 	public static void setLogger(Logger logger) {
 		GameLogger.logger = logger;
 	}

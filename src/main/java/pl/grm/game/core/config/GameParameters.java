@@ -11,4 +11,5 @@ public class GameParameters {
 	public static final int		RENDER_QUEUE_CAPACITY	= 50;
 	public static final int		FPS						= 60;
 	public static final int		TPS						= 20;
+	public static final String	CONFIG_FILE_NAME		= "Config.ini";
 }

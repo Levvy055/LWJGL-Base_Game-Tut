@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Rectangle implements Entity {
 	private int		ID;
+	private String	name;
 	private float	blue;
 	private float	green;
 	private float	red;
@@ -11,7 +12,6 @@ public class Rectangle implements Entity {
 	private float	y;
 	private float	width;
 	private float	height;
-	private String	name;
 	
 	public Rectangle(float x, float y) {
 		this(x, y, 64, 64);
