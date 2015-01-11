@@ -4,8 +4,9 @@ import java.util.*;
 
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
+import pl.grm.game.core.factory.*;
 import pl.grm.game.core.inputs.*;
-import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
 import com.google.common.collect.*;
@@ -22,9 +23,7 @@ public class GameController {
 	/** The Game Container */
 	private Game						game;
 	/** Stage of game rendering */
-	private GameRenderTypeStage			gameRenderStage;
-	/** Stage based on gameRenderStage */
-	private IGamePreStage				gamePreStage;
+	private GameLoadStage				gameLoadStage;
 	/** Map of keyboard listener */
 	private Map<Integer, KeyListener>	listenerMap;
 	/** Instance of GameController to control all game components */
@@ -38,11 +37,13 @@ public class GameController {
 		instance.game.destroyAllEntities(id);
 	}
 	
-	public void stopGame() {
-		setRunning(false);
+	public static void stopGame() {
+		GameLogger.info("Closing ...");
+		GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
+		instance.setRunning(false);
 	}
 	
-	public RenderThread getGameLoop() {
+	public RenderThread getRenderThread() {
 		return gameLoop;
 	}
 	
@@ -94,20 +95,12 @@ public class GameController {
 		this.game = game;
 	}
 	
-	public GameRenderTypeStage getGameRenderStage() {
-		return gameRenderStage;
+	public GameLoadStage getGameLoadStage() {
+		return gameLoadStage;
 	}
 	
-	public void setGameRenderStage(GameRenderTypeStage gameRenderStage) {
-		this.gameRenderStage = gameRenderStage;
-	}
-	
-	public IGamePreStage getGamePreStage() {
-		return gamePreStage;
-	}
-	
-	public void setGamePreStage(IGamePreStage gameStage) {
-		this.gamePreStage = gameStage;
+	public void setGameLoadStage(GameLoadStage gameLoadStage) {
+		this.gameLoadStage = gameLoadStage;
 	}
 	
 	public Map<Integer, KeyListener> getListenerMap() {

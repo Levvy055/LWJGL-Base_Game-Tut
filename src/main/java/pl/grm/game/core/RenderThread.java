@@ -10,7 +10,7 @@ import org.lwjgl.opengl.*;
 
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
-import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
 import com.google.common.collect.*;
@@ -28,55 +28,12 @@ public class RenderThread extends Thread {
 	@Override
 	public void run() {
 		initLoop();
-		while (!Display.isCloseRequested() && GameController.instance.isRunning()) {
+		while (GameController.instance.isRunning()) {
+			if (Display.isCloseRequested()) {
+				GameController.stopGame();
+			}
 			loop();
 		}
-		closeGame();
-	}
-	
-	private void loop() {
-		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		
-		switch (GameController.instance.getGameRenderStage()) {
-			case MENU :
-				renderMenu();
-				break;
-			default :
-				break;
-		}
-		renderEntities();
-		
-		Display.update();
-		timer.updateFPS();
-		Display.sync(GameParameters.FPS);
-	}
-	
-	private void renderEntities() {
-		Set<Integer> keySet = entities.keySet();
-		Iterator<Integer> keySetIterator = keySet.iterator();
-		while (keySetIterator.hasNext()) {
-			Integer key = keySetIterator.next();
-			Collection<Entity> entityCollection = entities.get(key);
-			Iterator<Entity> entityCollectionIterator = entityCollection.iterator();
-			synchronized (entityCollectionIterator) {
-				while (entityCollectionIterator.hasNext()) {
-					Entity entity = entityCollectionIterator.next();
-					entity.render();
-				}
-			}
-		}
-	}
-	
-	private void renderMenu() {
-		Menu menu = (Menu) GameController.instance.getGamePreStage();
-		// menu.render();
-	}
-	
-	/**
-	 * Method called after breaking loop
-	 */
-	private void closeGame() {
-		GameController.instance.stopGame();
 		Display.destroy();
 	}
 	
@@ -97,5 +54,45 @@ public class RenderThread extends Thread {
 		glLoadIdentity();
 		glOrtho(0, 800, 0, 600, 1, -1);
 		glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	private void loop() {
+		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		switch (GameController.instance.getGameLoadStage()) {
+			case INTRO :
+				Intro.renderStage();
+				break;
+			case MAIN_MENU :
+				MainMenu.renderStage();
+				break;
+			case GAME_LOADING :
+				GameLoading.renderStage();
+				break;
+			case GAME :
+				renderEntities();
+				break;
+			default :
+				break;
+		}
+		
+		Display.update();
+		timer.updateFPS();
+		Display.sync(GameParameters.FPS);
+	}
+	
+	private void renderEntities() {
+		Set<Integer> keySet = entities.keySet();
+		Iterator<Integer> keySetIterator = keySet.iterator();
+		while (keySetIterator.hasNext()) {
+			Integer key = keySetIterator.next();
+			Collection<Entity> entityCollection = entities.get(key);
+			Iterator<Entity> entityCollectionIterator = entityCollection.iterator();
+			synchronized (entityCollectionIterator) {
+				while (entityCollectionIterator.hasNext()) {
+					Entity entity = entityCollectionIterator.next();
+					entity.render();
+				}
+			}
+		}
 	}
 }

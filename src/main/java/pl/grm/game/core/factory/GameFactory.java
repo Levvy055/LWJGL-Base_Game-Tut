@@ -12,7 +12,7 @@ import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.inputs.*;
-import pl.grm.game.core.pregamestages.*;
+import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
 import com.google.common.collect.*;
@@ -64,15 +64,13 @@ public class GameFactory {
 	 * @return GameController
 	 */
 	public static GameController createGameController() {
-		GameController.instance = new GameController();
-		GameController gameController = GameController.instance;
-		Game game = createGame();
-		gameController.setGame(game);
+		GameController gameController = new GameController();
+		GameController.instance = gameController;
+		changeLoadStageTo(GameLoadStage.INTRO);
 		gameController.setFPSTimer(new FPSTimer());
-		gameController.setIterator(new GameEventIterator());
 		gameController.setGameLoop(new RenderThread());
-		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
-		gameController.setGamePreStage(new Menu());
+		gameController.setGame(createGame());
+		gameController.setIterator(new GameEventIterator());
 		gameController.setListenerMap(new HashMap<Integer, KeyListener>());
 		return gameController;
 	}
@@ -80,13 +78,14 @@ public class GameFactory {
 	/**
 	 * Creates Game with specified params
 	 * 
-	 * @return
+	 * @return Game created in this method
 	 */
 	private static Game createGame() {
 		Game game = new Game();
 		game.setEvents(new PriorityQueue<GameEvent>());
 		HashMultimap<Integer, Entity> entityMap = HashMultimap.create();
 		game.setEntities(entityMap);
+		ConfigFile.loadDefaults();
 		// efgame.setRenderQueue(new
 		// PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
 		return game;
@@ -99,28 +98,35 @@ public class GameFactory {
 	 */
 	public static void startGame(GameController gameController) {
 		gameController.setRunning(true);
-		ConfigFile.loadDefaults();
-		gameController.getGameLoop().start();
+		gameController.getRenderThread().start();
 		ConfigFile.loadConfigFromFile();
-		gameController.getIterator().fullIterator();
+		gameController.getIterator().mainIterator();
 	}
 	
-	public static void setLoadingMenu(GameController gameController) {
-		gameController.setGameRenderStage(GameRenderTypeStage.MENU_LOADING);
-		gameController.setGamePreStage(new Menu()); // TODO not menu
-	}
-	
-	public static void setMenu(GameController gameController) {
-		gameController.setGameRenderStage(GameRenderTypeStage.MENU);
-		gameController.setGamePreStage(new Menu());
-	}
-	
-	public static void setLoadingGame(GameController gameController) {
-		gameController.setGameRenderStage(GameRenderTypeStage.GAME_LOADING);
-		gameController.setGamePreStage(new Menu());// TODO not menu
-	}
-	
-	public static void setGame(GameController gameController) {
-		gameController.setGameRenderStage(GameRenderTypeStage.GAME);
+	public static void changeLoadStageTo(GameLoadStage stage) {
+		GameController.instance.setGameLoadStage(stage);
+		switch (stage) {
+			case INTRO :
+				Intro.startStage();
+				MainMenu.stopStage();
+				GameLoading.stopStage();
+				break;
+			case MAIN_MENU :
+				MainMenu.startStage();
+				Intro.stopStage();
+				GameLoading.stopStage();
+				break;
+			case GAME_LOADING :
+				GameLoading.startStage();
+				MainMenu.stopStage();
+				Intro.stopStage();
+				break;
+			case CLOSING :
+				GameLoading.stopStage();
+				MainMenu.stopStage();
+				Intro.stopStage();
+			default :
+				break;
+		}
 	}
 }

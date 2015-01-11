@@ -66,6 +66,7 @@ public class TickTimer {
 	}
 	
 	public void sync() {
+		updateTPS();
 		Sync.sync(tps);
 	}
 }
