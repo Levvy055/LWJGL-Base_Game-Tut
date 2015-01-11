@@ -8,6 +8,7 @@ import org.lwjgl.input.*;
 
 public class KeyManager {
 	private static ConcurrentHashMap<Integer, KeyListener>	keyListeners	= new ConcurrentHashMap<Integer, KeyListener>();
+	public static HashMap<KeyListener, Long>				deadZoneList	= new HashMap<KeyListener, Long>();
 	
 	public static void keyActionPerformer() {
 		if (!Keyboard.isCreated()) { return; }
@@ -15,7 +16,8 @@ public class KeyManager {
 		while (iterator.hasNext()) {
 			Entry<Integer, KeyListener> listenerEntry = iterator.next();
 			if (Keyboard.isKeyDown(listenerEntry.getKey())) {
-				listenerEntry.getValue().actionPerformed();
+				KeyListener keyListener = listenerEntry.getValue();
+				keyListener.actionPerformed();
 			}
 		}
 	}
@@ -31,4 +33,5 @@ public class KeyManager {
 	public static void removeListener(int key) {
 		keyListeners.remove(key);
 	}
+	
 }

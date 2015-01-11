@@ -38,9 +38,7 @@ public class Intro implements ILoadStage {
 		glPopMatrix();
 	}
 	
-	@Override
-	public void checkInputs() {
-		// TODO Auto-generated method stub
-		
+	public static boolean isRunning() {
+		return running;
 	}
 }

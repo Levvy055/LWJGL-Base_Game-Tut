@@ -6,10 +6,6 @@ public class GameLoading implements ILoadStage {
 	private static ILoadStage	instance;
 	private static boolean		running	= false;
 	
-	private GameLoading() {
-		
-	}
-	
 	public static void startStage() {
 		instance = new GameLoading();
 		running = true;
@@ -38,9 +34,7 @@ public class GameLoading implements ILoadStage {
 		glPopMatrix();
 	}
 	
-	@Override
-	public void checkInputs() {
-		// TODO Auto-generated method stub
-		
+	public static boolean isRunning() {
+		return running;
 	}
 }

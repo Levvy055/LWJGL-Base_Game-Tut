@@ -15,11 +15,13 @@ public class GameController {
 	/** Game main Loop of rendering things on screen */
 	private RenderThread				gameLoop;
 	/** Iterator which iterates over events */
-	private GameEventIterator			iterator;
+	private GameLogicIterator			iterator;
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
 	private FPSTimer					fpsTimer;
+	/** Timer to count game logic tps */
+	private TickTimer					tpsTimer;
 	/** The Game Container */
 	private Game						game;
 	/** Stage of game rendering */
@@ -63,11 +65,11 @@ public class GameController {
 		return game.getRenderQueue();
 	}
 	
-	public GameEventIterator getIterator() {
+	public GameLogicIterator getLogicIterator() {
 		return iterator;
 	}
 	
-	public void setIterator(GameEventIterator iterator) {
+	public void setLogicIterator(GameLogicIterator iterator) {
 		this.iterator = iterator;
 	}
 	
@@ -109,5 +111,13 @@ public class GameController {
 	
 	public void setListenerMap(Map<Integer, KeyListener> listenerMap) {
 		this.listenerMap = listenerMap;
+	}
+
+	public TickTimer getTpsTimer() {
+		return tpsTimer;
+	}
+
+	public void setTpsTimer(TickTimer tpsTimer) {
+		this.tpsTimer = tpsTimer;
 	}
 }

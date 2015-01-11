@@ -68,9 +68,10 @@ public class GameFactory {
 		GameController.instance = gameController;
 		changeLoadStageTo(GameLoadStage.INTRO);
 		gameController.setFPSTimer(new FPSTimer());
+		gameController.setTpsTimer(new TickTimer());
 		gameController.setGameLoop(new RenderThread());
 		gameController.setGame(createGame());
-		gameController.setIterator(new GameEventIterator());
+		gameController.setLogicIterator(new GameLogicIterator());
 		gameController.setListenerMap(new HashMap<Integer, KeyListener>());
 		return gameController;
 	}
@@ -100,7 +101,7 @@ public class GameFactory {
 		gameController.setRunning(true);
 		gameController.getRenderThread().start();
 		ConfigFile.loadConfigFromFile();
-		gameController.getIterator().mainIterator();
+		gameController.getLogicIterator().mainIterator();
 	}
 	
 	public static void changeLoadStageTo(GameLoadStage stage) {

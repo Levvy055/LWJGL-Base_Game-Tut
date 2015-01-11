@@ -1,6 +1,8 @@
-package pl.grm.game.core.entities;
+package pl.grm.game.core.entities.twodim;
 
 import org.lwjgl.opengl.*;
+
+import pl.grm.game.core.entities.*;
 
 public class Circle implements Entity {
 	private static final int	NUM_ANGLES	= 360;

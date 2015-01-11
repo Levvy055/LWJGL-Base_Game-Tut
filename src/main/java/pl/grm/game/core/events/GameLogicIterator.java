@@ -9,8 +9,8 @@ import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
-public class GameEventIterator {
-	private TickTimer	timer	= new TickTimer();
+public class GameLogicIterator {
+	private TickTimer	timer	= GameController.instance.getTpsTimer();
 	
 	public void mainIterator() {
 		timer.initTime(GameParameters.TPS);
@@ -38,6 +38,7 @@ public class GameEventIterator {
 	private void introIterate() {
 		Thread.currentThread().setName("Game Intro Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
+			baseLoop();
 			KeyManager.keyActionPerformer();
 			timer.sync();
 		}
@@ -46,15 +47,14 @@ public class GameEventIterator {
 	private void mainMenuIterate() {
 		Thread.currentThread().setName("Game Main Menu Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.MAIN_MENU) {
-			KeyManager.keyActionPerformer();
-			timer.sync();
+			baseLoop();
 		}
 	}
 	
 	private void gameLoadingIterate() {
 		Thread.currentThread().setName("Game Loading Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.GAME_LOADING) {
-			timer.sync();
+			baseLoop();
 		}
 	}
 	
@@ -64,12 +64,18 @@ public class GameEventIterator {
 	private void gameIterator() {
 		Thread.currentThread().setName("Game Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.GAME) {
-			KeyManager.keyActionPerformer();
 			
 			updateEntities();
 			System.out.println(GameController.instance.getEntities().size());
-			timer.sync();
+			baseLoop();
 		}
+	}
+	
+	private void baseLoop() {
+		System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
+				+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
+		KeyManager.keyActionPerformer();
+		timer.sync();
 	}
 	
 	private void updateEntities() {

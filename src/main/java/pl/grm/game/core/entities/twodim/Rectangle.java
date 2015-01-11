@@ -1,6 +1,7 @@
-package pl.grm.game.core.entities;
+package pl.grm.game.core.entities.twodim;
 
 import static org.lwjgl.opengl.GL11.*;
+import pl.grm.game.core.entities.*;
 
 public class Rectangle implements Entity {
 	private int		ID;

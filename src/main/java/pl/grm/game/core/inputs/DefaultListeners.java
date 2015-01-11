@@ -25,21 +25,25 @@ public class DefaultListeners {
 	}
 	
 	private static KeyListener ESC_Listener() {
-		return new KeyListener() {
-			@Override
-			public void actionPerformed() {
-				switch (GameController.instance.getGameLoadStage()) {
-					case INTRO :
-						GameFactory.changeLoadStageTo(GameLoadStage.MAIN_MENU);
-						break;
-					case MAIN_MENU :
-						GameController.stopGame();
-						break;
-					default :
-						break;
-				}
+		KeyListener keyListener = () -> {
+			switch (GameController.instance.getGameLoadStage()) {
+				case INTRO :
+					GameFactory.changeLoadStageTo(GameLoadStage.MAIN_MENU);
+					break;
+				case MAIN_MENU :
+					GameController.stopGame();
+					break;
+				case GAME :
+					break;
+				case GAME_LOADING :
+					break;
+				case CLOSING :
+					break;
+				default :
+					break;
 			}
 		};
+		return keyListener;
 	}
 	
 }

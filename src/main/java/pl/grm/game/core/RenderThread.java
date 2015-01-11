@@ -74,7 +74,6 @@ public class RenderThread extends Thread {
 			default :
 				break;
 		}
-		
 		Display.update();
 		timer.updateFPS();
 		Display.sync(GameParameters.FPS);
