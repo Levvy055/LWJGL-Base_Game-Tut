@@ -8,7 +8,7 @@ import org.lwjgl.input.*;
 
 public class KeyManager {
 	private static ConcurrentHashMap<Integer, KeyListener>	keyListeners	= new ConcurrentHashMap<Integer, KeyListener>();
-	public static HashMap<KeyListener, Long>				deadZoneList	= new HashMap<KeyListener, Long>();
+	private static HashMap<KeyListener, KeyListenerData>	listenersData	= new HashMap<KeyListener, KeyListenerData>();
 	
 	public static void keyActionPerformer() {
 		if (!Keyboard.isCreated()) { return; }
@@ -17,13 +17,16 @@ public class KeyManager {
 			Entry<Integer, KeyListener> listenerEntry = iterator.next();
 			if (Keyboard.isKeyDown(listenerEntry.getKey())) {
 				KeyListener keyListener = listenerEntry.getValue();
-				keyListener.actionPerformed();
+				if (listenersData.get(keyListener).canActionBePerformed()) {
+					keyListener.actionPerformed();
+				}
 			}
 		}
 	}
 	
 	public static void addKeyListener(int key, KeyListener keyListener) {
 		keyListeners.put(key, keyListener);
+		listenersData.put(keyListener, new KeyListenerData());
 	}
 	
 	public static boolean containsListener(int key) {
@@ -34,4 +37,23 @@ public class KeyManager {
 		keyListeners.remove(key);
 	}
 	
+	public static void lockKey(int key) {
+		KeyListener listener = keyListeners.get(key);
+		KeyListenerData keyListenerData = listenersData.get(listener);
+		keyListenerData.setEnabled(false);
+	}
+	
+	public static void unlockKey(int key) {
+		KeyListener listener = keyListeners.get(key);
+		KeyListenerData keyListenerData = listenersData.get(listener);
+		keyListenerData.setEnabled(true);
+	}
+	
+	public static void lockKeyForTime(int key, long secondsLock) {
+		KeyListener listener = keyListeners.get(key);
+		KeyListenerData keyListenerData = listenersData.get(listener);
+		keyListenerData
+				.setLastTimeUsed((long) ((System.currentTimeMillis() + secondsLock * 1000) + keyListenerData
+						.getDeadzone()));
+	}
 }
