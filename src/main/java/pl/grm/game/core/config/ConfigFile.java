@@ -13,7 +13,7 @@ public class ConfigFile {
 		for (GameProperties property : GameProperties.values()) {
 			if (property.getCategory().equals("Keys")) {
 				float value = property.getfValue();
-				KeyManager.addKeyListener((int) value, DefaultListeners.getListener((int) value));
+				LWJGLEventMulticaster.addKeyListener((int) value, DefaultListeners.getListener((int) value));
 			}
 		}
 	}

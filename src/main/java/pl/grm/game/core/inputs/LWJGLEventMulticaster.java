@@ -1,24 +1,27 @@
 package pl.grm.game.core.inputs;
 
-import java.util.*;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.lwjgl.input.*;
+import org.lwjgl.input.Keyboard;
 
-public class KeyManager {
+public class LWJGLEventMulticaster {
 	private static ConcurrentHashMap<Integer, KeyListener>	keyListeners	= new ConcurrentHashMap<Integer, KeyListener>();
 	private static HashMap<KeyListener, KeyListenerData>	listenersData	= new HashMap<KeyListener, KeyListenerData>();
 	
 	public static void keyActionPerformer() {
 		if (!Keyboard.isCreated()) { return; }
-		Iterator<Entry<Integer, KeyListener>> iterator = keyListeners.entrySet().iterator();
+		Iterator<Entry<Integer, KeyListener>> iterator = keyListeners.entrySet()
+				.iterator();
 		while (iterator.hasNext()) {
 			Entry<Integer, KeyListener> listenerEntry = iterator.next();
 			if (Keyboard.isKeyDown(listenerEntry.getKey())) {
 				KeyListener keyListener = listenerEntry.getValue();
 				if (listenersData.get(keyListener).canActionBePerformed()) {
-					keyListener.actionPerformed();
+					keyListener.keyPressed(null);
 				}
 			}
 		}

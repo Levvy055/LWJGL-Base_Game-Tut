@@ -1,21 +1,36 @@
 package pl.grm.game.core.factory;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
-import org.lwjgl.*;
-import org.lwjgl.opengl.*;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
-import pl.grm.game.core.*;
-import pl.grm.game.core.config.*;
-import pl.grm.game.core.entities.*;
-import pl.grm.game.core.events.*;
-import pl.grm.game.core.inputs.*;
-import pl.grm.game.core.loadstages.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.Game;
+import pl.grm.game.core.GameController;
+import pl.grm.game.core.GameLogger;
+import pl.grm.game.core.RenderThread;
+import pl.grm.game.core.config.ConfigFile;
+import pl.grm.game.core.config.GameParameters;
+import pl.grm.game.core.entities.Entity;
+import pl.grm.game.core.events.GameEvent;
+import pl.grm.game.core.events.GameLogicIterator;
+import pl.grm.game.core.loadstages.GameLoadStage;
+import pl.grm.game.core.loadstages.GameLoading;
+import pl.grm.game.core.loadstages.Intro;
+import pl.grm.game.core.loadstages.MainMenu;
+import pl.grm.game.core.timers.FPSTimer;
+import pl.grm.game.core.timers.TickTimer;
 
-import com.google.common.collect.*;
+import com.google.common.collect.HashMultimap;
 
 public class GameFactory {
 	
@@ -30,10 +45,11 @@ public class GameFactory {
 		File mainDir = new File(GameParameters.GAME_LOCATION);
 		try {
 			if (!mainDir.exists()) {
-				if (!mainDir.mkdir()) { throw new IOException("Cannot create main game folder!"); }
+				if (!mainDir.mkdir()) { throw new IOException(
+						"Cannot create main game folder!"); }
 			}
-			fHandler = new FileHandler(GameParameters.GAME_LOCATION + GameParameters.LOG_FILE_NAME,
-					1048476, 1, true);
+			fHandler = new FileHandler(GameParameters.GAME_LOCATION
+					+ GameParameters.LOG_FILE_NAME, 1048476, 1, true);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fHandler.setFormatter(formatter);
 		}

@@ -1,15 +1,18 @@
 package pl.grm.game.core;
 
-import java.util.*;
+import java.awt.event.KeyListener;
+import java.util.Map;
+import java.util.Queue;
 
-import pl.grm.game.core.entities.*;
-import pl.grm.game.core.events.*;
-import pl.grm.game.core.factory.*;
-import pl.grm.game.core.inputs.*;
-import pl.grm.game.core.loadstages.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.entities.Entity;
+import pl.grm.game.core.events.GameEvent;
+import pl.grm.game.core.events.GameLogicIterator;
+import pl.grm.game.core.factory.GameFactory;
+import pl.grm.game.core.loadstages.GameLoadStage;
+import pl.grm.game.core.timers.FPSTimer;
+import pl.grm.game.core.timers.TickTimer;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Multimap;
 
 public class GameController {
 	/** Game main Loop of rendering things on screen */
@@ -112,11 +115,11 @@ public class GameController {
 	public void setListenerMap(Map<Integer, KeyListener> listenerMap) {
 		this.listenerMap = listenerMap;
 	}
-
+	
 	public TickTimer getTpsTimer() {
 		return tpsTimer;
 	}
-
+	
 	public void setTpsTimer(TickTimer tpsTimer) {
 		this.tpsTimer = tpsTimer;
 	}

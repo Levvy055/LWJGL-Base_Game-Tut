@@ -39,7 +39,7 @@ public class GameLogicIterator {
 		Thread.currentThread().setName("Game Intro Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
 			baseLoop();
-			KeyManager.keyActionPerformer();
+			LWJGLEventMulticaster.keyActionPerformer();
 			timer.sync();
 		}
 	}
@@ -74,7 +74,7 @@ public class GameLogicIterator {
 	private void baseLoop() {
 		System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
 				+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
-		KeyManager.keyActionPerformer();
+		LWJGLEventMulticaster.keyActionPerformer();
 		timer.sync();
 	}
 	
