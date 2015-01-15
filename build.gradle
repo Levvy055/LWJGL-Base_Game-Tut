@@ -13,10 +13,14 @@ buildscript {
     }
 }
 
-version="0.0.0"
+if (hasProperty("teamcity")) {
+	    version="0.0.1."+teamcity['build.number']
+	} else {
+	    version="0.0.1.n"
+	}
 group="pl.grm"
 description="LWJGL Base Game Model"
-def archieveFileName="LWJGL Tut Game"
+def archieveFileName="LWJGL GRM Game"
 mainClassName="pl.grm.game.GameMain"
 
 repositories {
@@ -43,7 +47,7 @@ jar {
 
 task execJar(type: OneJar) {
 	mainClass = mainClassName
-	archiveName = archieveFileName+"-"+version+".jar"
+	 archiveName = archieveFileName+"-"+version+".jar"
 	binLib = files("libs/native/windows/lwjgl.dll", "libs/native/windows/lwjgl64.dll")
 }
 

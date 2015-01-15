@@ -1,18 +1,16 @@
 package pl.grm.game.core;
 
-import java.awt.event.KeyListener;
-import java.util.Map;
-import java.util.Queue;
+import java.awt.event.*;
+import java.util.*;
 
-import pl.grm.game.core.entities.Entity;
-import pl.grm.game.core.events.GameEvent;
-import pl.grm.game.core.events.GameLogicIterator;
-import pl.grm.game.core.factory.GameFactory;
-import pl.grm.game.core.loadstages.GameLoadStage;
-import pl.grm.game.core.timers.FPSTimer;
-import pl.grm.game.core.timers.TickTimer;
+import pl.grm.game.core.entities.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.factory.*;
+import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.loadstages.*;
+import pl.grm.game.core.timers.*;
 
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 
 public class GameController {
 	/** Game main Loop of rendering things on screen */
@@ -45,6 +43,7 @@ public class GameController {
 	public static void stopGame() {
 		GameLogger.info("Closing ...");
 		GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
+		LWJGLEventMulticaster.discharge();
 		instance.setRunning(false);
 	}
 	

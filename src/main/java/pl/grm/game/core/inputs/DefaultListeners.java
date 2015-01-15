@@ -1,33 +1,36 @@
 package pl.grm.game.core.inputs;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.HashMap;
+import java.util.*;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.*;
 
-import pl.grm.game.core.GameController;
-import pl.grm.game.core.factory.GameFactory;
-import pl.grm.game.core.loadstages.GameLoadStage;
+import pl.grm.game.core.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.factory.*;
+import pl.grm.game.core.loadstages.*;
 
 public class DefaultListeners {
-	private static HashMap<Integer, KeyListener>	defListeners;
-	
-	public static KeyListener getListener(int value) {
-		if (defListeners == null) {
-			init();
-		}
-		if (defListeners.containsKey(value)) { return defListeners.get(value); }
-		return null;
-	}
+	private static HashMap<Integer, GameKeyListener>	defListeners;
 	
 	private static void init() {
-		defListeners = new HashMap<Integer, KeyListener>();
+		defListeners = new HashMap<Integer, GameKeyListener>();
 		defListeners.put(Keyboard.KEY_ESCAPE, ESC_Listener());
 	}
 	
-	private static KeyListener ESC_Listener() {
-		KeyListener keyListener = new KeyListener() {
+	public static boolean contains(int value) {
+		if (defListeners == null) {
+			init();
+		}
+		if (defListeners.containsKey(value)) { return true; }
+		return false;
+	}
+	
+	public static GameKeyListener getListener(int value) {
+		return defListeners.get(value);
+	}
+	
+	private static GameKeyListener ESC_Listener() {
+		GameKeyListener keyListener = new GameKeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {}
 			

@@ -1,36 +1,22 @@
 package pl.grm.game.core.factory;
 
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.*;
+import org.lwjgl.opengl.*;
 
-import pl.grm.game.core.Game;
-import pl.grm.game.core.GameController;
-import pl.grm.game.core.GameLogger;
-import pl.grm.game.core.RenderThread;
-import pl.grm.game.core.config.ConfigFile;
-import pl.grm.game.core.config.GameParameters;
-import pl.grm.game.core.entities.Entity;
-import pl.grm.game.core.events.GameEvent;
-import pl.grm.game.core.events.GameLogicIterator;
-import pl.grm.game.core.loadstages.GameLoadStage;
-import pl.grm.game.core.loadstages.GameLoading;
-import pl.grm.game.core.loadstages.Intro;
-import pl.grm.game.core.loadstages.MainMenu;
-import pl.grm.game.core.timers.FPSTimer;
-import pl.grm.game.core.timers.TickTimer;
+import pl.grm.game.core.*;
+import pl.grm.game.core.config.*;
+import pl.grm.game.core.entities.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.loadstages.*;
+import pl.grm.game.core.timers.*;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.*;
 
 public class GameFactory {
 	
@@ -45,11 +31,10 @@ public class GameFactory {
 		File mainDir = new File(GameParameters.GAME_LOCATION);
 		try {
 			if (!mainDir.exists()) {
-				if (!mainDir.mkdir()) { throw new IOException(
-						"Cannot create main game folder!"); }
+				if (!mainDir.mkdir()) { throw new IOException("Cannot create main game folder!"); }
 			}
-			fHandler = new FileHandler(GameParameters.GAME_LOCATION
-					+ GameParameters.LOG_FILE_NAME, 1048476, 1, true);
+			fHandler = new FileHandler(GameParameters.GAME_LOCATION + GameParameters.LOG_FILE_NAME,
+					1048476, 1, true);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fHandler.setFormatter(formatter);
 		}
@@ -82,13 +67,13 @@ public class GameFactory {
 	public static GameController createGameController() {
 		GameController gameController = new GameController();
 		GameController.instance = gameController;
-		changeLoadStageTo(GameLoadStage.INTRO);
 		gameController.setFPSTimer(new FPSTimer());
 		gameController.setTpsTimer(new TickTimer());
 		gameController.setGameLoop(new RenderThread());
 		gameController.setGame(createGame());
 		gameController.setLogicIterator(new GameLogicIterator());
 		gameController.setListenerMap(new HashMap<Integer, KeyListener>());
+		ConfigFile.loadDefaults();
 		return gameController;
 	}
 	
@@ -99,10 +84,9 @@ public class GameFactory {
 	 */
 	private static Game createGame() {
 		Game game = new Game();
-		game.setEvents(new PriorityQueue<GameEvent>());
 		HashMultimap<Integer, Entity> entityMap = HashMultimap.create();
+		game.setEvents(new PriorityQueue<GameEvent>());
 		game.setEntities(entityMap);
-		ConfigFile.loadDefaults();
 		// efgame.setRenderQueue(new
 		// PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
 		return game;
@@ -114,10 +98,13 @@ public class GameFactory {
 	 * @param gameController
 	 */
 	public static void startGame(GameController gameController) {
+		changeLoadStageTo(GameLoadStage.INTRO);
 		gameController.setRunning(true);
 		gameController.getRenderThread().start();
 		ConfigFile.loadConfigFromFile();
-		gameController.getLogicIterator().mainIterator();
+		LWJGLEventMulticaster.init();
+		gameController.getLogicIterator().start();
+		LWJGLEventMulticaster.startMulitCaster();
 	}
 	
 	public static void changeLoadStageTo(GameLoadStage stage) {

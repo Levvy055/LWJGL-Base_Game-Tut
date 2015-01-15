@@ -5,14 +5,14 @@ import java.util.*;
 import pl.grm.game.core.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
-import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
-public class GameLogicIterator {
+public class GameLogicIterator extends Thread {
 	private TickTimer	timer	= GameController.instance.getTpsTimer();
 	
-	public void mainIterator() {
+	@Override
+	public void run() {
 		timer.initTime(GameParameters.TPS);
 		while (GameController.instance.isRunning()) {
 			GameLogger.info(GameController.instance.getGameLoadStage().toString());
@@ -39,7 +39,6 @@ public class GameLogicIterator {
 		Thread.currentThread().setName("Game Intro Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
 			baseLoop();
-			LWJGLEventMulticaster.keyActionPerformer();
 			timer.sync();
 		}
 	}
@@ -72,9 +71,10 @@ public class GameLogicIterator {
 	}
 	
 	private void baseLoop() {
-		System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
-				+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
-		LWJGLEventMulticaster.keyActionPerformer();
+		if (timer.getLastTps() == timer.getTPS()) {
+			System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
+					+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
+		}
 		timer.sync();
 	}
 	
