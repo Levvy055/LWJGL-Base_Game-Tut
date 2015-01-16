@@ -14,8 +14,12 @@ public class GameLogicIterator extends Thread {
 	@Override
 	public void run() {
 		timer.initTime(GameParameters.TPS);
+		boolean isClosing = false;
 		while (GameController.instance.isRunning()) {
-			GameLogger.info(GameController.instance.getGameLoadStage().toString());
+			GameLoadStage loadState = GameController.instance.getGameLoadStage();
+			if (loadState != GameLoadStage.CLOSING) {
+				GameLogger.info(loadState.toString());
+			}
 			switch (GameController.instance.getGameLoadStage()) {
 				case INTRO :
 					introIterate();
@@ -29,19 +33,22 @@ public class GameLogicIterator extends Thread {
 				case GAME :
 					gameIterator();
 					break;
+				case CLOSING :
+					if (!isClosing) {
+						isClosing = true;
+						GameLogger.info(loadState.toString());
+					}
+					break;
 				default :
 					break;
 			}
 		}
-		System.out.println("Thread end: " + currentThread().getName());
 	}
 	
 	private void introIterate() {
 		Thread.currentThread().setName("Game Intro Logic");
-		System.out.println("Thread started: " + currentThread().getName());
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
 			baseLoop();
-			timer.sync();
 		}
 	}
 	
@@ -73,7 +80,7 @@ public class GameLogicIterator extends Thread {
 	}
 	
 	private void baseLoop() {
-		if (timer.getLastTps() == timer.getTPS()) {
+		if (timer.isFullCycle()) {
 			System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
 					+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
 		}

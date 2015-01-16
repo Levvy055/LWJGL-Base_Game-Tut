@@ -21,11 +21,13 @@ public class DefaultListeners {
 		if (defListeners == null) {
 			init();
 		}
-		if (defListeners.containsKey(value)) { return true; }
-		return false;
+		return defListeners.containsKey(value);
 	}
 	
 	public static GameKeyListener getListener(int value) {
+		if (defListeners == null) {
+			init();
+		}
 		return defListeners.get(value);
 	}
 	

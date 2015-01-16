@@ -5,32 +5,32 @@ import java.util.*;
 import pl.grm.game.core.inputs.*;
 
 public class KeyEvent implements GameEvent {
-	
 	private int						eventKey;
 	private boolean					eventKeyState;
 	private long					eventTime;
 	private boolean					repeatEvent;
-	private List<GameKeyListener>	listeners;
+	private ArrayList<GameListener>	listeners;
 	
-	public KeyEvent(int eventKey, boolean eventKeyState, long eventTime, boolean repeatEvent) {
+	public KeyEvent(int eventKey, boolean eventKeyState, long eventTime, boolean repeatEvent,
+			ArrayList<GameListener> eventListeners) {
 		this.setEventKey(eventKey);
 		this.setEventKeyState(eventKeyState);
 		this.setEventTime(eventTime);
 		this.setRepeatEvent(repeatEvent);
-		this.listeners = new ArrayList<GameKeyListener>();
+		this.listeners = eventListeners;
 	}
 	
 	@Override
 	public void perform() {
-		for (GameKeyListener gameKeyListener : listeners) {
+		for (GameListener gameKeyListener : listeners) {
 			if (isEventKeyState()) {
 				if (isRepeatEvent()) {
-					gameKeyListener.keyTyped(this);
+					((GameKeyListener) gameKeyListener).keyTyped(this);
 				} else {
-					gameKeyListener.keyPressed(this);
+					((GameKeyListener) gameKeyListener).keyPressed(this);
 				}
 			} else {
-				gameKeyListener.keyReleased(this);
+				((GameKeyListener) gameKeyListener).keyReleased(this);
 			}
 		}
 	}
@@ -73,7 +73,7 @@ public class KeyEvent implements GameEvent {
 		this.repeatEvent = repeatEvent;
 	}
 	
-	public List<GameKeyListener> getListeners() {
+	public ArrayList<GameListener> getListeners() {
 		return listeners;
 	}
 }
