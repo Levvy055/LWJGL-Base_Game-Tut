@@ -9,6 +9,8 @@ public class GameMain {
 	public static void main(String[] args) {
 		Thread.currentThread().setName("Main");
 		GameLogger.setLogger(setupLogger());
+		System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir")
+				+ "/libs/native/windows");
 		gameController = createGameController();
 		initDisplay();
 		startGame(gameController);

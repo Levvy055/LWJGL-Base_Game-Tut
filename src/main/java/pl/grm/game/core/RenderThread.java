@@ -17,7 +17,7 @@ import com.google.common.collect.*;
 
 public class RenderThread extends Thread {
 	private FPSTimer					timer;
-	private Queue<Entity>				renderQueue;
+	// private Queue<Entity> renderQueue;
 	private Multimap<Integer, Entity>	entities;
 	
 	public RenderThread() {
@@ -27,7 +27,7 @@ public class RenderThread extends Thread {
 	
 	@Override
 	public void run() {
-		initLoop();
+		initRenderer();
 		while (GameController.instance.isRunning()) {
 			if (Display.isCloseRequested()) {
 				GameController.stopGame();
@@ -40,9 +40,10 @@ public class RenderThread extends Thread {
 	/**
 	 * Called before loop
 	 */
-	private void initLoop() {
+	private void initRenderer() {
 		this.timer.initTime();
-		this.renderQueue = GameController.instance.getGame().getRenderQueue();
+		// this.renderQueue =
+		// GameController.instance.getGame().getRenderQueue();
 		this.entities = GameController.instance.getGame().getEntities();
 		try {
 			Display.create();
@@ -53,11 +54,12 @@ public class RenderThread extends Thread {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, 800, 0, 600, 1, -1);
-		glMatrixMode(GL11.GL_MODELVIEW);
+		glViewport(0, 0, 800, 600);
+		glMatrixMode(GL_MODELVIEW);
 	}
 	
 	private void loop() {
-		glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		switch (GameController.instance.getGameLoadStage()) {
 			case INTRO :
 				Intro.renderStage();

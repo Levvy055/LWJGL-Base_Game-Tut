@@ -42,24 +42,28 @@ public class GameController {
 	
 	@SuppressWarnings("static-access")
 	public static synchronized void stopGame() {
-		new Thread(() -> {
-			Thread.currentThread().setName("Closing Thread");
-			GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
-			LWJGLEventMulticaster.discharge();
-			instance.setRunning(false);
-			long initTime = System.currentTimeMillis();
-			while (instance.getLogicIterator().isAlive() || instance.getRenderThread().isAlive()) {
-				try {
-					Thread.currentThread().sleep(100l);
-				}
-				catch (InterruptedException e) {
-					GameLogger.logException(e);
-				}
-				long timeDelay = System.currentTimeMillis() - initTime;
-				if (timeDelay > 5 * 1000) {
-					System.out.println("Thread rage quit: " + Thread.currentThread().getName());
-					System.exit(0);
-					break;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Thread.currentThread().setName("Closing Thread");
+				GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
+				LWJGLEventMulticaster.discharge();
+				instance.setRunning(false);
+				long initTime = System.currentTimeMillis();
+				while (instance.getLogicIterator().isAlive()
+						|| instance.getRenderThread().isAlive()) {
+					try {
+						Thread.currentThread().sleep(100l);
+					}
+					catch (InterruptedException e) {
+						GameLogger.logException(e);
+					}
+					long timeDelay = System.currentTimeMillis() - initTime;
+					if (timeDelay > 5 * 1000) {
+						System.out.println("Thread rage quit: " + Thread.currentThread().getName());
+						System.exit(0);
+						break;
+					}
 				}
 			}
 		}).start();
