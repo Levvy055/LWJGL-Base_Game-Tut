@@ -14,7 +14,7 @@ public class ConfigFile {
 			if (property.getCategory().equals("Keys")) {
 				int value = property.getiValue();
 				if (DefaultListeners.contains(value)
-						&& LWJGLEventMulticaster.containsListener(value)) {
+						&& !LWJGLEventMulticaster.containsListener(value)) {
 					LWJGLEventMulticaster
 							.addKeyListener(value, DefaultListeners.getListener(value));
 				}

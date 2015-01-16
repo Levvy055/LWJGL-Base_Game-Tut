@@ -13,6 +13,11 @@ public class TickTimer {
 		lastCallTime = getTime();
 	}
 	
+	public void sync() {
+		updateTPS();
+		Sync.sync(tps);
+	}
+	
 	/**
 	 * Calculate the TPS and set it
 	 */
@@ -24,6 +29,16 @@ public class TickTimer {
 			lastCallTime += 1000;
 		}
 		tpsT++;
+	}
+	
+	/**
+	 * last tps is equal current tick amount in current second
+	 * so in other words is true every second
+	 * 
+	 * @return true if condition in description is true
+	 */
+	public boolean isFullCycle() {
+		return getLastTps() == getTPS() || (getTime() - lastCallTime > 1000);
 	}
 	
 	/**
@@ -63,10 +78,5 @@ public class TickTimer {
 	 */
 	public long getLastTps() {
 		return lastTPS;
-	}
-	
-	public void sync() {
-		updateTPS();
-		Sync.sync(tps);
 	}
 }

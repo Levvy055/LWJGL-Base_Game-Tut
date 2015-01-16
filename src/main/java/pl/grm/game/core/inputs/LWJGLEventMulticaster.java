@@ -1,10 +1,12 @@
 package pl.grm.game.core.inputs;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.*;
 
 import org.lwjgl.input.*;
 
+import pl.grm.game.core.*;
 import pl.grm.game.core.events.*;
 
 public class LWJGLEventMulticaster extends Thread {
@@ -51,18 +53,15 @@ public class LWJGLEventMulticaster extends Thread {
 		switch (type) {
 			case COLLECTOR :
 				currentThread().setName("LWJGL Event Collector");
-				System.out.println("Thread started: " + currentThread().getName());
 				collectEvents();
 				break;
 			case CASTER :
 				currentThread().setName("LWJGL Event Multicaster");
-				System.out.println("Thread started: " + currentThread().getName());
 				castEvents();
 				break;
 			default :
 				break;
 		}
-		System.out.println("Thread end: " + currentThread().getName());
 	}
 	
 	/**
@@ -76,7 +75,7 @@ public class LWJGLEventMulticaster extends Thread {
 				sleep(100l);
 			}
 			catch (InterruptedException e) {
-				e.printStackTrace();
+				GameLogger.logException(e);
 			}
 			if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
 				eventCaster.setStopInvoked(true);
@@ -100,43 +99,48 @@ public class LWJGLEventMulticaster extends Thread {
 				continue;
 			}
 			while (Keyboard.next()) {
-				KeyEvent event = new KeyEvent(Keyboard.getEventKey(), Keyboard.getEventKeyState(),
-						System.currentTimeMillis(), Keyboard.isRepeatEvent());
+				int eventKey = Keyboard.getEventKey();
+				ArrayList<GameListener> eventListeners = collectKeyListeners(Keyboard.getEventKey());
+				KeyEvent event = new KeyEvent(eventKey, Keyboard.getEventKeyState(),
+						System.currentTimeMillis(), Keyboard.isRepeatEvent(), eventListeners);
 				gameEventsQueue.add(event);
 			}
 		}
 		setFinished(true);
 	}
 	
+	private ArrayList<GameListener> collectKeyListeners(int eventKey) {
+		ArrayList<GameListener> eventListeners = new ArrayList<GameListener>();
+		Iterator<Entry<Integer, GameKeyListener>> iterator = LWJGLEventMulticaster.keyListenersHandler
+				.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<Integer, GameKeyListener> listenerEntry = iterator.next();
+			if (listenerEntry.getKey() == eventKey) {
+				GameKeyListener keyListener = listenerEntry.getValue();
+				eventListeners.add(keyListener);
+			}
+		}
+		return eventListeners;
+	}
+	
 	private synchronized void castEvents() {
 		while (!isStopInvoked()) {
 			if (!gameEventsQueue.isEmpty()) {
+				
+				System.out.println(gameEventsQueue.size());
 				gameEventsQueue.poll().perform();
 			} else {
 				try {
 					sleep(100l);
 				}
 				catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					GameLogger.logException(e);
 				}
 			}
 			Iterator<GameEvent> iterator = gameEventsQueue.iterator();
 			System.out.print("");
 		}
 		setFinished(true);
-		
-		// Iterator<Entry<Integer, GameKeyListener>> iterator =
-		// LWJGLEventMulticaster.keyListenersHandler
-		// .entrySet().iterator();
-		// while (iterator.hasNext()) {
-		// Entry<Integer, GameKeyListener> listenerEntry = iterator.next();
-		//
-		// GameKeyListener keyListener = listenerEntry.getValue();
-		// if (keyListener.canActionBePerformed()) {
-		// keyListener.keyPressed(null);
-		// }
-		// }
 	}
 	
 	public static void addKeyListener(int key, GameKeyListener keyListener) {

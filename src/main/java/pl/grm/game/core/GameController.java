@@ -44,8 +44,6 @@ public class GameController {
 	public static synchronized void stopGame() {
 		new Thread(() -> {
 			Thread.currentThread().setName("Closing Thread");
-			System.out.println("Thread started: " + Thread.currentThread().getName());
-			GameLogger.info("Closing ...");
 			GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
 			LWJGLEventMulticaster.discharge();
 			instance.setRunning(false);
@@ -55,7 +53,7 @@ public class GameController {
 					Thread.currentThread().sleep(100l);
 				}
 				catch (InterruptedException e) {
-					e.printStackTrace();
+					GameLogger.logException(e);
 				}
 				long timeDelay = System.currentTimeMillis() - initTime;
 				if (timeDelay > 5 * 1000) {
@@ -64,7 +62,6 @@ public class GameController {
 					break;
 				}
 			}
-			System.out.println("Thread end: " + Thread.currentThread().getName());
 		}).start();
 	}
 	

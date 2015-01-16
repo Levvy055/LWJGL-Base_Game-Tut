@@ -28,7 +28,6 @@ public class RenderThread extends Thread {
 	@Override
 	public void run() {
 		initLoop();
-		System.out.println("Thread started: " + currentThread().getName());
 		while (GameController.instance.isRunning()) {
 			if (Display.isCloseRequested()) {
 				GameController.stopGame();
@@ -36,7 +35,6 @@ public class RenderThread extends Thread {
 			loop();
 		}
 		Display.destroy();
-		System.out.println("Thread end: " + currentThread().getName());
 	}
 	
 	/**
