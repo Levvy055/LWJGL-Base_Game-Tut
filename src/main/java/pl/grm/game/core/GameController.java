@@ -16,7 +16,7 @@ public class GameController {
 	/** Game main Loop of rendering things on screen */
 	private RenderThread				gameLoop;
 	/** Iterator which iterates over events */
-	private GameLogicIterator			iterator;
+	private GameLogicIterator			logicIterator;
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
@@ -40,11 +40,32 @@ public class GameController {
 		instance.game.destroyAllEntities(id);
 	}
 	
-	public static void stopGame() {
-		GameLogger.info("Closing ...");
-		GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
-		LWJGLEventMulticaster.discharge();
-		instance.setRunning(false);
+	@SuppressWarnings("static-access")
+	public static synchronized void stopGame() {
+		new Thread(() -> {
+			Thread.currentThread().setName("Closing Thread");
+			System.out.println("Thread started: " + Thread.currentThread().getName());
+			GameLogger.info("Closing ...");
+			GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
+			LWJGLEventMulticaster.discharge();
+			instance.setRunning(false);
+			long initTime = System.currentTimeMillis();
+			while (instance.getLogicIterator().isAlive() || instance.getRenderThread().isAlive()) {
+				try {
+					Thread.currentThread().sleep(100l);
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				long timeDelay = System.currentTimeMillis() - initTime;
+				if (timeDelay > 5 * 1000) {
+					System.out.println("Thread rage quit: " + Thread.currentThread().getName());
+					System.exit(0);
+					break;
+				}
+			}
+			System.out.println("Thread end: " + Thread.currentThread().getName());
+		}).start();
 	}
 	
 	public RenderThread getRenderThread() {
@@ -68,11 +89,11 @@ public class GameController {
 	}
 	
 	public GameLogicIterator getLogicIterator() {
-		return iterator;
+		return logicIterator;
 	}
 	
 	public void setLogicIterator(GameLogicIterator iterator) {
-		this.iterator = iterator;
+		this.logicIterator = iterator;
 	}
 	
 	public boolean isRunning() {

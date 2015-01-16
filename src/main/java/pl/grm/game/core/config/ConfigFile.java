@@ -12,10 +12,11 @@ public class ConfigFile {
 	public static void loadDefaults() {
 		for (GameProperties property : GameProperties.values()) {
 			if (property.getCategory().equals("Keys")) {
-				float value = property.getfValue();
-				if (DefaultListeners.contains((int) value)) {
-					LWJGLEventMulticaster.addKeyListener((int) value,
-							DefaultListeners.getListener((int) value));
+				int value = property.getiValue();
+				if (DefaultListeners.contains(value)
+						&& LWJGLEventMulticaster.containsListener(value)) {
+					LWJGLEventMulticaster
+							.addKeyListener(value, DefaultListeners.getListener(value));
 				}
 			}
 		}

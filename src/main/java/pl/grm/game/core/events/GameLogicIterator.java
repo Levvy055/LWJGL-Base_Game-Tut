@@ -33,10 +33,12 @@ public class GameLogicIterator extends Thread {
 					break;
 			}
 		}
+		System.out.println("Thread end: " + currentThread().getName());
 	}
 	
 	private void introIterate() {
 		Thread.currentThread().setName("Game Intro Logic");
+		System.out.println("Thread started: " + currentThread().getName());
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
 			baseLoop();
 			timer.sync();
