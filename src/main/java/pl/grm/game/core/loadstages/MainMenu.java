@@ -26,15 +26,16 @@ public class MainMenu implements ILoadStage {
 	
 	@Override
 	public void render() {
+		int x = 100, y = 100, w = 64, h = 64;
+		glDisable(GL_TEXTURE_2D);
 		glColor3f(1.0f, 0f, 0f);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 		glPushMatrix();
+		
 		glBegin(GL_QUADS);
-		glVertex2f(0, 0);
-		glVertex2f(0, 64);
-		glVertex2f(64, 64);
-		glVertex2f(64, 0);
+		glVertex2f(x, y);
+		glVertex2f(x, y + h);
+		glVertex2f(x + w, y + h);
+		glVertex2f(x + w, y);
 		glEnd();
 		glPopMatrix();
 	}

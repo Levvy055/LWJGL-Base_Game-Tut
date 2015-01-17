@@ -53,7 +53,7 @@ public class RenderThread extends Thread {
 		}
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, 1, -1);
+		glOrtho(0, 800, 600, 0, 1, -1);
 		glViewport(0, 0, 800, 600);
 		glMatrixMode(GL_MODELVIEW);
 	}
