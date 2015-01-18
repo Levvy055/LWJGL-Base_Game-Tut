@@ -1,4 +1,4 @@
-package pl.grm.game.core;
+package pl.grm.game.core.misc;
 
 import java.util.logging.*;
 
@@ -24,5 +24,11 @@ public class GameLogger {
 	
 	public static void setLogger(Logger logger) {
 		GameLogger.logger = logger;
+	}
+	
+	public static void closeLogger() {
+		Handler handler = logger.getHandlers()[0];
+		logger.removeHandler(handler);
+		handler.close();
 	}
 }

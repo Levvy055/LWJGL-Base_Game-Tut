@@ -9,12 +9,13 @@ import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
 import pl.grm.game.core.*;
+import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
-import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.loadstages.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.misc.*;
+import pl.grm.game.core.misc.timers.*;
 
 import com.google.common.collect.*;
 
@@ -53,6 +54,7 @@ public class GameFactory {
 		try {
 			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setTitle(GameParameters.GAME_TITLE);
+			Display.setVSyncEnabled(true);
 		}
 		catch (LWJGLException e) {
 			GameLogger.log(Level.SEVERE, e.toString(), e);

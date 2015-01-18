@@ -21,7 +21,7 @@ if (hasProperty("teamcity")) {
 group="pl.grm"
 description="LWJGL Base Game Model"
 def archieveFileName="LWJGL GRM Game"
-mainClassName="pl.grm.game.GameMain"
+mainClassName="pl.grm.game.Main"
 
 repositories {
     mavenCentral()

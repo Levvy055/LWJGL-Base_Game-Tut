@@ -1,4 +1,4 @@
-package pl.grm.game.core.events;
+package pl.grm.game.core.basethreads;
 
 import java.util.*;
 
@@ -6,7 +6,8 @@ import pl.grm.game.core.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.loadstages.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.misc.*;
+import pl.grm.game.core.misc.timers.*;
 
 public class LogicThread extends Thread {
 	private TickTimer	timer	= GameController.instance.getTpsTimer();
@@ -55,6 +56,7 @@ public class LogicThread extends Thread {
 	private void mainMenuIterate() {
 		Thread.currentThread().setName("Game Main Menu Logic");
 		while (GameController.instance.getGameLoadStage() == GameLoadStage.MAIN_MENU) {
+			MainMenu.update();
 			baseLoop();
 		}
 	}

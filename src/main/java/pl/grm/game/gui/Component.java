@@ -2,28 +2,137 @@ package pl.grm.game.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.*;
+
+import org.lwjgl.input.*;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.*;
 
 public abstract class Component {
-	private Container	parent;
-	private int			x;
-	private int			y;
-	private int			width;
-	private int			height;
-	private Color		backgroundColor	= (Color) Color.CYAN;
-	private Color		foregroundColor;
-	private boolean		visible;
-	private boolean		enabled;
-	private String		name;
-	private boolean		focus;
+	private Container				parent;
+	private ArrayList<Component>	childs			= new ArrayList<Component>();
+	private int						x				= 0;
+	private int						y				= 0;
+	private int						width			= 64;
+	private int						height			= 64;
+	private Color					backgroundColor	= (Color) ReadableColor.GREY;
+	private Color					foregroundColor	= (Color) ReadableColor.WHITE;
+	private boolean					visible			= true;
+	private boolean					enabled			= true;
+	private String					name			= "Component";
+	private boolean					focus			= false;
 	
 	public Component() {}
+	
+	public Component(String name) {
+		this.setName(name);
+	}
+	
+	public Component(int x, int y, String name) {
+		this(name);
+		this.setPosition(x, y);
+	}
+	
+	public void draw() {
+		if (isEnabled() && isVisible()) {
+			glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
+					backgroundColor.getBlue());
+			glMatrixMode(GL_PROJECTION);
+			glViewport(0, 0, Display.getWidth(), Display.getHeight());
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			paint();
+			glPopMatrix();
+			glPushMatrix();
+			
+			glBegin(GL_LINE_STRIP);
+			glPointSize(5.0f);
+			glColor3f(1.0f, 0.0f, 0.5f);
+			glVertex2f(Mouse.getX(), Display.getHeight() - Mouse.getY());
+			glVertex2i(400, 300);
+			glEnd();
+			glPopMatrix();
+			if (hasChilds()) {
+				for (Component component : childs) {
+					component.draw();
+				}
+			}
+		}
+	}
+	
+	protected abstract void paint();
+	
+	public void update() {
+		if (isEnabled()) {
+			int mX = Mouse.getX();
+			int mY = Display.getHeight() - Mouse.getY();
+			int x1 = getX();
+			int x2 = getX() + getWidth();
+			int y1 = getY();
+			int y2 = getY() + getHeight();
+			if (hasParent() && getParent() instanceof Component) {
+				int pX = ((Component) parent).getX();
+				int pY = ((Component) parent).getY();
+				x1 = x1 - pX;
+				x2 -= pX;
+				y1 -= pY;
+				y2 -= pY;
+				System.out.println("a");
+			}
+			boolean xT = mX > x1 && mX < x2;
+			boolean yT = mY > y1 && mY < y2;
+			if (xT && yT) {
+				setFocus(true);
+			} else {
+				setFocus(false);
+			}
+			// if (hasChilds()) {
+			// for (Component component : childs) {
+			// component.update();
+			// }
+			// }
+			System.out.println("X: " + mX + " | " + x1 + "-" + x2);
+			System.out.println("Y: " + mY + " | " + y1 + "-" + y2);
+			String f = isFocus() ? "TTT" : "___", fx = xT ? "TTT" : "___", fY = yT ? "TTT" : "___";
+			System.out.println("Focus: " + f + " inX: " + fx + " inY: " + fY);
+		}
+	}
+	
+	protected void addChild(Component child) {
+		if (this instanceof Container) {
+			child.setParent((Container) this);
+			this.childs.add(child);
+		}
+	}
+	
+	public boolean hasChilds() {
+		return !childs.isEmpty();
+	}
+	
+	public void setPosition(int x, int y) {
+		this.setX(x);
+		this.setY(y);
+	}
+	
+	public void setSize(int s) {
+		setWidth(getWidth() * s);
+		setHeight(getHeight() * s);
+	}
+	
+	public void setSize(int width, int height) {
+		setWidth(width);
+		setHeight(height);
+	}
+	
+	public boolean hasParent() {
+		return parent != null ? true : false;
+	}
 	
 	public Container getParent() {
 		return this.parent;
 	}
 	
-	public void setParent(Container parent) {
+	protected void setParent(Container parent) {
 		this.parent = parent;
 	}
 	
@@ -106,14 +215,4 @@ public abstract class Component {
 	public void setFocus(boolean focus) {
 		this.focus = focus;
 	}
-	
-	public void draw() {
-		glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue());
-		glPushMatrix();
-		paint();
-		glPopMatrix();
-		
-	}
-	
-	public abstract void paint();
 }

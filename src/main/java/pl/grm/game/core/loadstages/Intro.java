@@ -11,7 +11,8 @@ import org.newdawn.slick.util.*;
 
 import pl.grm.game.core.*;
 import pl.grm.game.core.factory.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.misc.*;
+import pl.grm.game.core.misc.timers.*;
 
 public class Intro implements ILoadStage {
 	private static ILoadStage		instance;

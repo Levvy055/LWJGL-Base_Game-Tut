@@ -1,4 +1,4 @@
-package pl.grm.game.core.inputs;
+package pl.grm.game.core.basethreads;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -8,6 +8,8 @@ import org.lwjgl.input.*;
 
 import pl.grm.game.core.*;
 import pl.grm.game.core.events.*;
+import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.misc.*;
 
 public class LWJGLEventMulticaster extends Thread {
 	private static ConcurrentHashMap<Integer, GameKeyListener>	keyListenersHandler;

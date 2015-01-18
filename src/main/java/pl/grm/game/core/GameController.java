@@ -3,12 +3,13 @@ package pl.grm.game.core;
 import java.awt.event.*;
 import java.util.*;
 
+import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.factory.*;
-import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.loadstages.*;
-import pl.grm.game.core.timers.*;
+import pl.grm.game.core.misc.*;
+import pl.grm.game.core.misc.timers.*;
 
 import com.google.common.collect.*;
 
@@ -16,7 +17,7 @@ public class GameController {
 	/** Game main Loop of rendering things on screen */
 	private RenderThread				renderThread;
 	/** Iterator which iterates over events */
-	private LogicThread			logicThread;
+	private LogicThread					logicThread;
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
@@ -50,8 +51,7 @@ public class GameController {
 				LWJGLEventMulticaster.discharge();
 				instance.setRunning(false);
 				long initTime = System.currentTimeMillis();
-				while (instance.getLogicThread().isAlive()
-						|| instance.getRenderThread().isAlive()) {
+				while (instance.getLogicThread().isAlive() || instance.getRenderThread().isAlive()) {
 					try {
 						Thread.currentThread().sleep(100l);
 					}
@@ -64,6 +64,7 @@ public class GameController {
 						System.exit(0);
 						break;
 					}
+					GameLogger.closeLogger();
 				}
 			}
 		}).start();

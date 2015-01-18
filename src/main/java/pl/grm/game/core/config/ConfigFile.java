@@ -5,7 +5,9 @@ import java.io.*;
 import org.ini4j.*;
 
 import pl.grm.game.core.*;
+import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.misc.*;
 
 public class ConfigFile {
 	

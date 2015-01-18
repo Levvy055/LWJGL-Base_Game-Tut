@@ -1,4 +1,4 @@
-package pl.grm.game.core.timers;
+package pl.grm.game.core.misc.timers;
 
 public class TickTimer {
 	private long	lastTick;

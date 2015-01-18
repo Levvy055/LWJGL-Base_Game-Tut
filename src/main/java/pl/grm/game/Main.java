@@ -2,6 +2,7 @@ package pl.grm.game;
 
 import static pl.grm.game.core.factory.GameFactory.*;
 import pl.grm.game.core.*;
+import pl.grm.game.core.misc.*;
 
 public class Main {
 	private static GameController	gameController;

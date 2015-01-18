@@ -1,6 +1,5 @@
 package pl.grm.game.core.loadstages;
 
-import static org.lwjgl.opengl.GL11.*;
 import pl.grm.game.gui.*;
 
 public class MainMenu implements ILoadStage {
@@ -30,33 +29,20 @@ public class MainMenu implements ILoadStage {
 	@Override
 	public void render() {
 		frame.draw();
-		
-		// int x = 0, y = 100, w = 64, h = 64;
-		// glDisable(GL_TEXTURE_2D);
-		// glColor3f(1.0f, 0f, 0f);
-		// glPushMatrix();
-		// glBegin(GL_QUADS);
-		// glVertex2f(x, y);
-		// glVertex2f(x, y + h);
-		// glVertex2f(x + w, y + h);
-		// glVertex2f(x + w, y);
-		// glEnd();
-		// glPopMatrix();
 	}
 	
 	private void setupFrame() {
-		frame.add(new Component() {
-			int x = 0, y = 100, w = 64, h = 64;
-			@Override
-			public void paint() {
-				glBegin(GL_QUADS);
-				glVertex2f(x, y);
-				glVertex2f(x, y + h);
-				glVertex2f(x + w, y + h);
-				glVertex2f(x + w, y);
-				glEnd();
-			}
-		});
+		Panel panel = new Panel(100, 0, "Panela");
+		// Button button = new Button(10, 0, "Close");
+		// button.setSize(10, 10);
+		// button.setBackgroundColor((Color) ReadableColor.ORANGE);
+		// panel.add(button);
+		frame.add(panel);
+		
+	}
+	
+	public static void update() {
+		((MainMenu) instance).frame.update();
 	}
 	
 	public static boolean isRunning() {
