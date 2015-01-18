@@ -50,7 +50,7 @@ public class LWJGLEventMulticaster extends Thread {
 	
 	@Override
 	public void run() {
-		switch (type) {
+		switch (this.type) {
 			case COLLECTOR :
 				currentThread().setName("LWJGL Event Collector");
 				collectEvents();

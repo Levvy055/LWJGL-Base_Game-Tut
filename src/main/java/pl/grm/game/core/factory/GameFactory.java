@@ -71,7 +71,7 @@ public class GameFactory {
 		gameController.setTpsTimer(new TickTimer());
 		gameController.setGameLoop(new RenderThread());
 		gameController.setGame(createGame());
-		gameController.setLogicIterator(new GameLogicIterator());
+		gameController.setLogicThread(new LogicThread());
 		gameController.setListenerMap(new HashMap<Integer, KeyListener>());
 		return gameController;
 	}
@@ -97,13 +97,13 @@ public class GameFactory {
 	 * @param gameController
 	 */
 	public static void startGame(GameController gameController) {
-		changeLoadStageTo(GameLoadStage.INTRO);
+		changeLoadStageTo(GameLoadStage.MAIN_MENU);
 		gameController.setRunning(true);
 		LWJGLEventMulticaster.init();
 		ConfigFile.loadDefaults();
 		gameController.getRenderThread().start();
 		ConfigFile.loadConfigFromFile();
-		gameController.getLogicIterator().start();
+		gameController.getLogicThread().start();
 		LWJGLEventMulticaster.startMulitCaster();
 	}
 	

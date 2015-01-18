@@ -18,7 +18,7 @@ public class Intro implements ILoadStage {
 	private static boolean			running		= false;
 	private static List<Texture>	textures	= new ArrayList<Texture>();
 	private TickTimer				timer;
-	private boolean					afterFirstRender;
+	private boolean					isAfterFirstRender;
 	private Texture					texture;
 	
 	private Intro() {
@@ -44,14 +44,14 @@ public class Intro implements ILoadStage {
 	public void render() {
 		Color.white.bind();
 		try {
-			if (!afterFirstRender) {
+			if (!isAfterFirstRender) {
 				glEnable(GL_TEXTURE_2D);
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				texture = TextureLoader.getTexture("PNG",
 						ResourceLoader.getResourceAsStream("defaultImage.png"));
 				loadImages();
-				afterFirstRender = true;
+				isAfterFirstRender = true;
 			}
 			texture.bind();
 		}
@@ -94,7 +94,7 @@ public class Intro implements ILoadStage {
 				boolean asc = true;
 				while (isRunning()) {
 					int maxID = textures.size() - 1;
-					if (afterFirstRender && maxID != -1) {
+					if (isAfterFirstRender && maxID != -1) {
 						if (asc) {
 							textureID++;
 						} else {

@@ -8,7 +8,7 @@ import pl.grm.game.core.entities.*;
 import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.timers.*;
 
-public class GameLogicIterator extends Thread {
+public class LogicThread extends Thread {
 	private TickTimer	timer	= GameController.instance.getTpsTimer();
 	
 	@Override
@@ -81,8 +81,13 @@ public class GameLogicIterator extends Thread {
 	
 	private void baseLoop() {
 		if (timer.isFullCycle()) {
-			System.out.println("FPS: " + GameController.instance.getFPSTimer().getLastFps()
-					+ " | TPS: " + GameController.instance.getTpsTimer().getLastTps());
+			long lastFps = GameController.instance.getFPSTimer().getLastFps();
+			long lastTps = GameController.instance.getTpsTimer().getLastTps();
+			if (lastFps != 0 & lastTps != 0) {
+				System.out.println("FPS: " + lastFps + " | TPS: " + lastTps);
+			} else {
+				System.out.println("Please wait. Game is loading ... ");
+			}
 		}
 		timer.sync();
 	}

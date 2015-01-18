@@ -14,9 +14,9 @@ import com.google.common.collect.*;
 
 public class GameController {
 	/** Game main Loop of rendering things on screen */
-	private RenderThread				gameLoop;
+	private RenderThread				renderThread;
 	/** Iterator which iterates over events */
-	private GameLogicIterator			logicIterator;
+	private LogicThread			logicThread;
 	/** Specifies that game is running or not */
 	private boolean						running;
 	/** Timer to count game FPS and Delta */
@@ -50,7 +50,7 @@ public class GameController {
 				LWJGLEventMulticaster.discharge();
 				instance.setRunning(false);
 				long initTime = System.currentTimeMillis();
-				while (instance.getLogicIterator().isAlive()
+				while (instance.getLogicThread().isAlive()
 						|| instance.getRenderThread().isAlive()) {
 					try {
 						Thread.currentThread().sleep(100l);
@@ -70,11 +70,11 @@ public class GameController {
 	}
 	
 	public RenderThread getRenderThread() {
-		return gameLoop;
+		return renderThread;
 	}
 	
-	public void setGameLoop(RenderThread loop) {
-		this.gameLoop = loop;
+	public void setGameLoop(RenderThread thread) {
+		this.renderThread = thread;
 	}
 	
 	public Queue<GameEvent> getEvents() {
@@ -89,12 +89,12 @@ public class GameController {
 		return game.getRenderQueue();
 	}
 	
-	public GameLogicIterator getLogicIterator() {
-		return logicIterator;
+	public LogicThread getLogicThread() {
+		return logicThread;
 	}
 	
-	public void setLogicIterator(GameLogicIterator iterator) {
-		this.logicIterator = iterator;
+	public void setLogicThread(LogicThread thread) {
+		this.logicThread = thread;
 	}
 	
 	public boolean isRunning() {
