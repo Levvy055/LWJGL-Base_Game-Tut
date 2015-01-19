@@ -1,5 +1,10 @@
 package pl.grm.game.core.loadstages;
 
+import static org.lwjgl.opengl.GL11.*;
+
+import org.lwjgl.util.*;
+
+import pl.grm.game.core.misc.*;
 import pl.grm.game.gui.*;
 
 public class MainMenu implements ILoadStage {
@@ -29,14 +34,17 @@ public class MainMenu implements ILoadStage {
 	@Override
 	public void render() {
 		frame.draw();
+		Fonts.getFont(0).drawString(100, 50, "THE LIGHTWEIGHT JAVA GAMES LIBRARY",
+				org.newdawn.slick.Color.yellow);
+		Fonts.getFont(1).drawString(100, 100, "NICE LOOKING FONTS!", org.newdawn.slick.Color.green);
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	private void setupFrame() {
-		Panel panel = new Panel(100, 0, "Panela");
-		// Button button = new Button(10, 0, "Close");
-		// button.setSize(10, 10);
-		// button.setBackgroundColor((Color) ReadableColor.ORANGE);
-		// panel.add(button);
+		Panel panel = new Panel(200, 200, 100, 100, "Panela");
+		Button button = new Button(10, 10, 50, 64, "Close");
+		button.setBackgroundColor((Color) ReadableColor.ORANGE);
+		panel.add(button);
 		frame.add(panel);
 		
 	}

@@ -22,16 +22,18 @@ public abstract class Component {
 	private String					name			= "Component";
 	private boolean					focus			= false;
 	
-	public Component() {}
-	
-	public Component(String name) {
-		this.setName(name);
-	}
-	
 	public Component(int x, int y, String name) {
-		this(name);
+		this.setName(name);
 		this.setPosition(x, y);
 	}
+	
+	public Component(int x, int y, int width, int height, String name) {
+		this(x, y, name);
+		this.setWidth(width);
+		this.setHeight(height);
+	}
+	
+	protected abstract void paint();
 	
 	public void draw() {
 		if (isEnabled() && isVisible()) {
@@ -60,8 +62,6 @@ public abstract class Component {
 		}
 	}
 	
-	protected abstract void paint();
-	
 	public void update() {
 		if (isEnabled()) {
 			int mX = Mouse.getX();
@@ -86,15 +86,16 @@ public abstract class Component {
 			} else {
 				setFocus(false);
 			}
-			// if (hasChilds()) {
-			// for (Component component : childs) {
-			// component.update();
-			// }
-			// }
+			if (hasChilds()) {
+				for (Component component : childs) {
+					component.update();
+				}
+			}
 			System.out.println("X: " + mX + " | " + x1 + "-" + x2);
 			System.out.println("Y: " + mY + " | " + y1 + "-" + y2);
-			String f = isFocus() ? "TTT" : "___", fx = xT ? "TTT" : "___", fY = yT ? "TTT" : "___";
-			System.out.println("Focus: " + f + " inX: " + fx + " inY: " + fY);
+			String f = hasFocus() ? "TTT" : "___";
+			System.out.println("Focus: " + f + " child: "
+					+ (childs.size() != 0 ? childs.get(0).hasFocus() : "__"));
 		}
 	}
 	
@@ -109,17 +110,17 @@ public abstract class Component {
 		return !childs.isEmpty();
 	}
 	
-	public void setPosition(int x, int y) {
+	public synchronized void setPosition(int x, int y) {
 		this.setX(x);
 		this.setY(y);
 	}
 	
-	public void setSize(int s) {
+	public synchronized void setSize(int s) {
 		setWidth(getWidth() * s);
 		setHeight(getHeight() * s);
 	}
 	
-	public void setSize(int width, int height) {
+	public synchronized void setSize(int width, int height) {
 		setWidth(width);
 		setHeight(height);
 	}
@@ -208,7 +209,7 @@ public abstract class Component {
 		this.name = name;
 	}
 	
-	public boolean isFocus() {
+	public boolean hasFocus() {
 		return this.focus;
 	}
 	

@@ -2,15 +2,11 @@ package pl.grm.game.core.basethreads;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.Font;
-import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
+import org.lwjgl.*;
 import org.lwjgl.opengl.*;
-import org.newdawn.slick.*;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.util.*;
 
 import pl.grm.game.core.*;
 import pl.grm.game.core.config.*;
@@ -25,8 +21,6 @@ public class RenderThread extends Thread {
 	private FPSTimer					timer;
 	// private Queue<Entity> renderQueue;
 	private Multimap<Integer, Entity>	entities;
-	private TrueTypeFont				font;
-	private TrueTypeFont				font2;
 	
 	public RenderThread() {
 		super(GameParameters.GAME_TITLE + " Game-Render-Loop");
@@ -53,14 +47,8 @@ public class RenderThread extends Thread {
 		this.entities = GameController.instance.getGame().getEntities();
 		try {
 			Display.create();
-			Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
-			font = new TrueTypeFont(awtFont, false);
-			InputStream inputStream = ResourceLoader.getResourceAsStream("arial.ttf");
-			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-			awtFont2 = awtFont2.deriveFont(24f);
-			font2 = new TrueTypeFont(awtFont2, false);
 		}
-		catch (Exception e) {
+		catch (LWJGLException e) {
 			GameLogger.log(Level.SEVERE, e.toString(), e);
 		}
 		glShadeModel(GL_SMOOTH);
@@ -75,10 +63,6 @@ public class RenderThread extends Thread {
 	
 	private void loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_TEXTURE_2D);
-		font.drawString(100, 50, "THE LIGHTWEIGHT JAVA GAMES LIBRARY", Color.yellow);
-		font2.drawString(100, 100, "NICE LOOKING FONTS!", Color.green);
-		glDisable(GL_TEXTURE_2D);
 		switch (GameController.instance.getGameLoadStage()) {
 			case INTRO :
 				Intro.renderStage();

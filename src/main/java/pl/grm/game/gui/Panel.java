@@ -8,6 +8,10 @@ public class Panel extends Component implements Container {
 		super(x, y, name);
 	}
 	
+	public Panel(int x, int y, int width, int height, String name) {
+		super(x, y, width, height, name);
+	}
+	
 	@Override
 	public void paint() {
 		glRecti(getX(), getY(), getWidth(), getHeight());
@@ -19,6 +23,10 @@ public class Panel extends Component implements Container {
 		int yC = component.getY() + getY();
 		component.setPosition(xC, yC);
 		addChild(component);
+		if (xC + component.getWidth() > getX() + getWidth()) {
+			setWidth(xC + component.getWidth() - getX());
+			setHeight(yC + component.getHeight() - getY());
+		}
 	}
 	
 }

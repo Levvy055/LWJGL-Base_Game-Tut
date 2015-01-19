@@ -8,8 +8,10 @@ public class Button extends Component {
 		super(x, y, name);
 	}
 	
-	public Button(String name) {
-		super(name);
+	public Button(int x, int y, int width, int height, String name) {
+		this(x, y, name);
+		this.setWidth(width);
+		this.setHeight(height);
 	}
 	
 	@Override

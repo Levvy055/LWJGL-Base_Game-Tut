@@ -6,7 +6,6 @@ import java.util.concurrent.*;
 
 import org.lwjgl.input.*;
 
-import pl.grm.game.core.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.misc.*;
@@ -167,7 +166,7 @@ public class LWJGLEventMulticaster extends Thread {
 		return initialised;
 	}
 	
-	public static void setInitialised(boolean initialised) {
+	private static void setInitialised(boolean initialised) {
 		LWJGLEventMulticaster.initialised = initialised;
 	}
 	

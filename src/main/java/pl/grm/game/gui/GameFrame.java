@@ -23,7 +23,7 @@ public class GameFrame implements Container {
 	}
 	
 	public void draw() {
-		// drawBackground();
+		drawBackground();
 		for (Component component : components) {
 			component.draw();
 		}
@@ -31,8 +31,7 @@ public class GameFrame implements Container {
 	
 	private void drawBackground() {
 		glColor3f(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
-		int x = 0, y = 0, w = 800, h = 600;
-		glRecti(x, y, w, h);
+		glRecti(0, 0, 800, 600);
 	}
 	
 	public void setBackgroundColor(Color color) {
