@@ -60,14 +60,6 @@ public abstract class Component {
 			int x2 = getX() + getWidth();
 			int y1 = getY();
 			int y2 = getY() + getHeight();
-			if (hasParent() && getParent() instanceof Component) {
-				int pX = ((Component) parent).getX();
-				int pY = ((Component) parent).getY();
-				x1 = x1 - pX;
-				x2 -= pX;
-				y1 -= pY;
-				y2 -= pY;
-			}
 			boolean xT = mX > x1 && mX < x2;
 			boolean yT = mY > y1 && mY < y2;
 			if (xT && yT) {
