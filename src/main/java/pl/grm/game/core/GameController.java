@@ -122,6 +122,10 @@ public class GameController {
 		this.game = game;
 	}
 	
+	public static GameLoadStage getGameStage() {
+		return instance.getGameLoadStage();
+	}
+	
 	public GameLoadStage getGameLoadStage() {
 		return gameLoadStage;
 	}

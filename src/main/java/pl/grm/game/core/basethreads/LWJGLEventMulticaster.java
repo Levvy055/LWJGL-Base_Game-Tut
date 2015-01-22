@@ -6,12 +6,15 @@ import java.util.concurrent.*;
 
 import org.lwjgl.input.*;
 
+import pl.grm.game.core.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.misc.*;
 
 public class LWJGLEventMulticaster extends Thread {
 	private static ConcurrentHashMap<Integer, GameKeyListener>	keyListenersHandler;
+	private static ConcurrentHashMap<String, GameKeyListener>	buttonListenersHandler;
 	private static Queue<GameEvent>								gameEventsQueue;
 	private static LWJGLEventMulticaster						eventCollector;
 	private static LWJGLEventMulticaster						eventCaster;
@@ -36,6 +39,9 @@ public class LWJGLEventMulticaster extends Thread {
 		}
 		if (keyListenersHandler == null) {
 			keyListenersHandler = new ConcurrentHashMap<Integer, GameKeyListener>();
+		}
+		if (buttonListenersHandler == null) {
+			buttonListenersHandler = new ConcurrentHashMap<String, GameKeyListener>();
 		}
 		setInitialised(true);
 	}
@@ -106,6 +112,15 @@ public class LWJGLEventMulticaster extends Thread {
 						System.currentTimeMillis(), Keyboard.isRepeatEvent(), eventListeners);
 				gameEventsQueue.add(event);
 			}
+			if (GameController.getGameStage() == GameLoadStage.MAIN_MENU) {
+				while (MainMenu.next()) {
+					String eventButton = MainMenu.getEventButton();
+					ArrayList<GameListener> eventListeners = collectKeyListeners(eventButton);
+					KeyEvent event = new KeyEvent(eventButton, MainMenu.getEventKeyState(),
+							System.currentTimeMillis(), MainMenu.isRepeatEvent(), eventListeners);
+					gameEventsQueue.add(event);
+				}
+			}
 		}
 		setFinished(true);
 	}
@@ -117,6 +132,20 @@ public class LWJGLEventMulticaster extends Thread {
 		while (iterator.hasNext()) {
 			Entry<Integer, GameKeyListener> listenerEntry = iterator.next();
 			if (listenerEntry.getKey() == eventKey) {
+				GameKeyListener keyListener = listenerEntry.getValue();
+				eventListeners.add(keyListener);
+			}
+		}
+		return eventListeners;
+	}
+	
+	private ArrayList<GameListener> collectKeyListeners(String eventButton) {
+		ArrayList<GameListener> eventListeners = new ArrayList<GameListener>();
+		Iterator<Entry<String, GameKeyListener>> iterator = LWJGLEventMulticaster.buttonListenersHandler
+				.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, GameKeyListener> listenerEntry = iterator.next();
+			if (listenerEntry.getKey() == eventButton) {
 				GameKeyListener keyListener = listenerEntry.getValue();
 				eventListeners.add(keyListener);
 			}
@@ -145,7 +174,12 @@ public class LWJGLEventMulticaster extends Thread {
 	}
 	
 	public static void addKeyListener(int key, GameKeyListener keyListener) {
-		LWJGLEventMulticaster.keyListenersHandler.put(key, keyListener);
+		keyListenersHandler.put(key, keyListener);
+	}
+	
+	public static void addButtonListener(String button, GameKeyListener gameButtonListener) {
+		buttonListenersHandler.put(button, gameButtonListener);
+		
 	}
 	
 	public static boolean containsListener(int key) {

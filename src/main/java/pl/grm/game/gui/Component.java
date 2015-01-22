@@ -8,6 +8,9 @@ import org.lwjgl.input.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.*;
 
+import pl.grm.game.core.basethreads.*;
+import pl.grm.game.core.inputs.*;
+
 public abstract class Component {
 	private Container				parent;
 	private ArrayList<Component>	childs			= new ArrayList<Component>();
@@ -22,13 +25,9 @@ public abstract class Component {
 	private String					name			= "Component";
 	private boolean					focus			= false;
 	
-	public Component(int x, int y, String name) {
+	public Component(int x, int y, int width, int height, String name) {
 		this.setName(name);
 		this.setPosition(x, y);
-	}
-	
-	public Component(int x, int y, int width, int height, String name) {
-		this(x, y, name);
 		this.setWidth(width);
 		this.setHeight(height);
 	}
@@ -39,20 +38,11 @@ public abstract class Component {
 		if (isEnabled() && isVisible()) {
 			glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
 					backgroundColor.getBlue());
-			glMatrixMode(GL_PROJECTION);
-			glViewport(0, 0, Display.getWidth(), Display.getHeight());
-			glMatrixMode(GL_MODELVIEW);
+			if (hasFocus()) {
+				glColor3f(1f, 0f, 0f);
+			}
 			glPushMatrix();
 			paint();
-			glPopMatrix();
-			glPushMatrix();
-			
-			glBegin(GL_LINE_STRIP);
-			glPointSize(5.0f);
-			glColor3f(1.0f, 0.0f, 0.5f);
-			glVertex2f(Mouse.getX(), Display.getHeight() - Mouse.getY());
-			glVertex2i(400, 300);
-			glEnd();
 			glPopMatrix();
 			if (hasChilds()) {
 				for (Component component : childs) {
@@ -77,7 +67,6 @@ public abstract class Component {
 				x2 -= pX;
 				y1 -= pY;
 				y2 -= pY;
-				System.out.println("a");
 			}
 			boolean xT = mX > x1 && mX < x2;
 			boolean yT = mY > y1 && mY < y2;
@@ -91,11 +80,6 @@ public abstract class Component {
 					component.update();
 				}
 			}
-			System.out.println("X: " + mX + " | " + x1 + "-" + x2);
-			System.out.println("Y: " + mY + " | " + y1 + "-" + y2);
-			String f = hasFocus() ? "TTT" : "___";
-			System.out.println("Focus: " + f + " child: "
-					+ (childs.size() != 0 ? childs.get(0).hasFocus() : "__"));
 		}
 	}
 	
@@ -104,6 +88,10 @@ public abstract class Component {
 			child.setParent((Container) this);
 			this.childs.add(child);
 		}
+	}
+	
+	public void addActionListener(GameKeyListener gameButtonListener) {
+		LWJGLEventMulticaster.addButtonListener(this.getName(), gameButtonListener);
 	}
 	
 	public boolean hasChilds() {
@@ -127,6 +115,10 @@ public abstract class Component {
 	
 	public boolean hasParent() {
 		return parent != null ? true : false;
+	}
+	
+	protected void drawRect(int x, int y, int width, int height) {
+		glRecti(x, y, x + width, y + height);
 	}
 	
 	public Container getParent() {

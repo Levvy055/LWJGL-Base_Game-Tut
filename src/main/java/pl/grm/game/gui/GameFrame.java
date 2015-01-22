@@ -7,11 +7,11 @@ import java.util.*;
 import org.lwjgl.util.*;
 
 public class GameFrame implements Container {
-	private ArrayList<Component>	components;
-	private Color					bgColor;
+	private HashMap<String, Component>	components;
+	private Color						bgColor;
 	
 	public GameFrame() {
-		this.components = new ArrayList<Component>();
+		this.components = new HashMap<String, Component>();
 		bgColor = (Color) ReadableColor.BLACK;
 	}
 	
@@ -19,19 +19,23 @@ public class GameFrame implements Container {
 	public void add(Component component) {
 		if (component == null) { return; }
 		component.setParent(this);
-		components.add(component);
+		components.put(component.getName(), component);
 	}
 	
 	public void draw() {
 		drawBackground();
-		for (Component component : components) {
+		Iterator<String> iterator = components.keySet().iterator();
+		while (iterator.hasNext()) {
+			Component component = components.get(iterator.next());
 			component.draw();
 		}
 	}
 	
 	private void drawBackground() {
+		glPushMatrix();
 		glColor3f(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
 		glRecti(0, 0, 800, 600);
+		glPopMatrix();
 	}
 	
 	public void setBackgroundColor(Color color) {
@@ -39,8 +43,14 @@ public class GameFrame implements Container {
 	}
 	
 	public void update() {
-		for (Component component : components) {
+		Iterator<String> iterator = components.keySet().iterator();
+		while (iterator.hasNext()) {
+			Component component = components.get(iterator.next());
 			component.update();
 		}
+	}
+	
+	public HashMap<String, Component> getComponents() {
+		return components;
 	}
 }

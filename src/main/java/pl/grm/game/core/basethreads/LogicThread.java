@@ -17,11 +17,11 @@ public class LogicThread extends Thread {
 		timer.initTime(GameParameters.TPS);
 		boolean isClosing = false;
 		while (GameController.instance.isRunning()) {
-			GameLoadStage loadState = GameController.instance.getGameLoadStage();
+			GameLoadStage loadState = GameController.getGameStage();
 			if (loadState != GameLoadStage.CLOSING) {
 				GameLogger.info(loadState.toString());
 			}
-			switch (GameController.instance.getGameLoadStage()) {
+			switch (GameController.getGameStage()) {
 				case INTRO :
 					introIterate();
 					break;
@@ -48,14 +48,14 @@ public class LogicThread extends Thread {
 	
 	private void introIterate() {
 		Thread.currentThread().setName("Game Intro Logic");
-		while (GameController.instance.getGameLoadStage() == GameLoadStage.INTRO) {
+		while (GameController.getGameStage() == GameLoadStage.INTRO) {
 			baseLoop();
 		}
 	}
 	
 	private void mainMenuIterate() {
 		Thread.currentThread().setName("Game Main Menu Logic");
-		while (GameController.instance.getGameLoadStage() == GameLoadStage.MAIN_MENU) {
+		while (GameController.getGameStage() == GameLoadStage.MAIN_MENU) {
 			MainMenu.update();
 			baseLoop();
 		}
@@ -63,7 +63,7 @@ public class LogicThread extends Thread {
 	
 	private void gameLoadingIterate() {
 		Thread.currentThread().setName("Game Loading Logic");
-		while (GameController.instance.getGameLoadStage() == GameLoadStage.GAME_LOADING) {
+		while (GameController.getGameStage() == GameLoadStage.GAME_LOADING) {
 			baseLoop();
 		}
 	}
@@ -73,7 +73,7 @@ public class LogicThread extends Thread {
 	 */
 	private void gameIterator() {
 		Thread.currentThread().setName("Game Logic");
-		while (GameController.instance.getGameLoadStage() == GameLoadStage.GAME) {
+		while (GameController.getGameStage() == GameLoadStage.GAME) {
 			
 			updateEntities();
 			System.out.println(GameController.instance.getEntities().size());

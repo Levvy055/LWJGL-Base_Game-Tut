@@ -51,19 +51,22 @@ public class RenderThread extends Thread {
 		catch (LWJGLException e) {
 			GameLogger.log(Level.SEVERE, e.toString(), e);
 		}
-		glShadeModel(GL_SMOOTH);
+		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		glScalef(1.0f, 1.0f, 1.0f);
 		glOrtho(0, 800, 600, 0, 1, -1);
-		glViewport(0, 0, 800, 600);
+		glFrustum(-1, 1, -1, 1, 0.0, 40.0);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glShadeModel(GL_SMOOTH);
 	}
 	
 	private void loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		switch (GameController.instance.getGameLoadStage()) {
+		switch (GameController.getGameStage()) {
 			case INTRO :
 				Intro.renderStage();
 				break;

@@ -6,6 +6,7 @@ import pl.grm.game.core.inputs.*;
 
 public class KeyEvent implements GameEvent {
 	private int						eventKey;
+	private String					buttonKey;
 	private boolean					eventKeyState;
 	private long					eventTime;
 	private boolean					repeatEvent;
@@ -17,6 +18,16 @@ public class KeyEvent implements GameEvent {
 		this.setEventKeyState(eventKeyState);
 		this.setEventTime(eventTime);
 		this.setRepeatEvent(repeatEvent);
+		this.listeners = eventListeners;
+	}
+	
+	public KeyEvent(String eventButton, boolean eventKeyState, long eventTime, boolean repeatEvent,
+			ArrayList<GameListener> eventListeners) {
+		this.setButtonKey(eventButton);
+		this.setEventKeyState(eventKeyState);
+		this.setEventTime(eventTime);
+		this.setRepeatEvent(repeatEvent);
+		this.listeners = new ArrayList<GameListener>();
 		this.listeners = eventListeners;
 	}
 	
@@ -75,5 +86,13 @@ public class KeyEvent implements GameEvent {
 	
 	public ArrayList<GameListener> getListeners() {
 		return listeners;
+	}
+	
+	public String getButtonKey() {
+		return buttonKey;
+	}
+	
+	public void setButtonKey(String eventButton) {
+		this.buttonKey = eventButton;
 	}
 }

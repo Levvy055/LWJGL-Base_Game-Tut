@@ -1,12 +1,6 @@
 package pl.grm.game.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class Panel extends Component implements Container {
-	
-	public Panel(int x, int y, String name) {
-		super(x, y, name);
-	}
 	
 	public Panel(int x, int y, int width, int height, String name) {
 		super(x, y, width, height, name);
@@ -14,7 +8,7 @@ public class Panel extends Component implements Container {
 	
 	@Override
 	public void paint() {
-		glRecti(getX(), getY(), getWidth(), getHeight());
+		drawRect(getX(), getY(), getWidth(), getHeight());
 	}
 	
 	@Override
@@ -25,8 +19,9 @@ public class Panel extends Component implements Container {
 		addChild(component);
 		if (xC + component.getWidth() > getX() + getWidth()) {
 			setWidth(xC + component.getWidth() - getX());
+		}
+		if (xC + component.getHeight() > getY() + getHeight()) {
 			setHeight(yC + component.getHeight() - getY());
 		}
 	}
-	
 }

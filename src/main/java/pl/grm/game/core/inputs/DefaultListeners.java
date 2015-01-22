@@ -41,7 +41,7 @@ public class DefaultListeners {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				switch (GameController.instance.getGameLoadStage()) {
+				switch (GameController.getGameStage()) {
 					case INTRO :
 						GameFactory.changeLoadStageTo(GameLoadStage.MAIN_MENU);
 						break;
