@@ -1,10 +1,15 @@
 package pl.grm.game.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRecti;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import org.lwjgl.util.*;
+import org.lwjgl.util.Color;
+import org.lwjgl.util.ReadableColor;
 
 public class GameFrame implements Container {
 	private HashMap<String, Component>	components;
@@ -52,5 +57,11 @@ public class GameFrame implements Container {
 	
 	public HashMap<String, Component> getComponents() {
 		return components;
+	}
+	
+	@Override
+	public void reparse() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,15 +1,17 @@
 package pl.grm.game.core.loadstages;
 
-import static org.lwjgl.opengl.GL11.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import java.util.*;
+import org.lwjgl.util.Color;
+import org.lwjgl.util.ReadableColor;
 
-import org.lwjgl.util.*;
-
-import pl.grm.game.core.events.*;
-import pl.grm.game.core.inputs.*;
-import pl.grm.game.core.misc.*;
-import pl.grm.game.gui.*;
+import pl.grm.game.core.events.KeyEvent;
+import pl.grm.game.core.inputs.GameKeyListener;
+import pl.grm.game.gui.Button;
+import pl.grm.game.gui.GameFrame;
+import pl.grm.game.gui.Label;
+import pl.grm.game.gui.Panel;
 
 public class MainMenu implements ILoadStage {
 	private static ILoadStage		instance;
@@ -40,10 +42,6 @@ public class MainMenu implements ILoadStage {
 	public void render() {
 		if (frame.getComponents().isEmpty()) { return; }
 		frame.draw();
-		Fonts.getFont(0).drawString(100, 50, "THE LWJGL JAVA GAME", org.newdawn.slick.Color.yellow);
-		Fonts.getFont(1).drawString(100, 100, "Main Menu!", org.newdawn.slick.Color.green);
-		glDisable(GL_TEXTURE_2D);
-		
 	}
 	
 	public static void update() {
@@ -75,6 +73,17 @@ public class MainMenu implements ILoadStage {
 		});
 		btPanel.add(closeButton);
 		frame.add(btPanel);
+		Panel titlePanel = new Panel(100, 50, 100, 20, "Title Panel");
+		Label titleLabel = new Label(0, 0, 100, 20, "Title Label");
+		titleLabel.setText("THE LWJGL JAVA GAME");
+		titleLabel.setFontColor(org.newdawn.slick.Color.green);
+		titlePanel.add(titleLabel);
+		Label titleLabel2 = new Label(0, 100, 100, 20, "Title 2 Label");
+		titleLabel2.setText("Main Menu!");
+		titleLabel2.setFontColor(org.newdawn.slick.Color.green);
+		titlePanel.add(titleLabel2);
+		
+		frame.add(titlePanel);
 		
 	}
 	

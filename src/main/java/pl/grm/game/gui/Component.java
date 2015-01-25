@@ -1,29 +1,35 @@
 package pl.grm.game.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRecti;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.lwjgl.input.*;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.*;
+import org.lwjgl.util.Color;
+import org.lwjgl.util.ReadableColor;
 
-import pl.grm.game.core.basethreads.*;
-import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.basethreads.LWJGLEventMulticaster;
+import pl.grm.game.core.inputs.GameKeyListener;
 
 public abstract class Component {
-	private Container				parent;
-	private ArrayList<Component>	childs			= new ArrayList<Component>();
-	private int						x				= 0;
-	private int						y				= 0;
-	private int						width			= 64;
-	private int						height			= 64;
-	private Color					backgroundColor	= (Color) ReadableColor.GREY;
-	private Color					foregroundColor	= (Color) ReadableColor.WHITE;
-	private boolean					visible			= true;
-	private boolean					enabled			= true;
-	private String					name			= "Component";
-	private boolean					focus			= false;
+	protected Container								parent;
+	protected ConcurrentHashMap<String, Component>	childs					= new ConcurrentHashMap<String, Component>();
+	protected int									x						= 0;
+	protected int									y						= 0;
+	protected int									width					= 64;
+	protected int									height					= 64;
+	protected Color									backgroundColor			= (Color) ReadableColor.GREY;
+	private boolean									backgroundTransparent	= false;
+	protected Color									foregroundColor			= (Color) ReadableColor.WHITE;
+	protected boolean								visible					= true;
+	protected boolean								enabled					= true;
+	protected String								name					= "Component";
+	protected boolean								focus					= false;
 	
 	public Component(int x, int y, int width, int height, String name) {
 		this.setName(name);
@@ -36,8 +42,10 @@ public abstract class Component {
 	
 	public void draw() {
 		if (isEnabled() && isVisible()) {
-			glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
-					backgroundColor.getBlue());
+			if (!isBackgroundTransparent()) {
+				glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
+						backgroundColor.getBlue());
+			}
 			if (hasFocus()) {
 				glColor3f(1f, 0f, 0f);
 			}
@@ -45,7 +53,8 @@ public abstract class Component {
 			paint();
 			glPopMatrix();
 			if (hasChilds()) {
-				for (Component component : childs) {
+				for (Iterator<String> it = childs.keySet().iterator(); it.hasNext();) {
+					Component component = childs.get(it.next());
 					component.draw();
 				}
 			}
@@ -68,7 +77,8 @@ public abstract class Component {
 				setFocus(false);
 			}
 			if (hasChilds()) {
-				for (Component component : childs) {
+				for (Iterator<String> it = childs.keySet().iterator(); it.hasNext();) {
+					Component component = childs.get(it.next());
 					component.update();
 				}
 			}
@@ -78,7 +88,7 @@ public abstract class Component {
 	protected void addChild(Component child) {
 		if (this instanceof Container) {
 			child.setParent((Container) this);
-			this.childs.add(child);
+			this.childs.put(child.getName(), child);
 		}
 	}
 	
@@ -109,6 +119,7 @@ public abstract class Component {
 		return parent != null ? true : false;
 	}
 	
+	@SuppressWarnings("static-method")
 	protected void drawRect(int x, int y, int width, int height) {
 		glRecti(x, y, x + width, y + height);
 	}
@@ -199,5 +210,13 @@ public abstract class Component {
 	
 	public void setFocus(boolean focus) {
 		this.focus = focus;
+	}
+	
+	public boolean isBackgroundTransparent() {
+		return backgroundTransparent;
+	}
+	
+	public void setBackgroundTransparent(boolean backgroundTransparent) {
+		this.backgroundTransparent = backgroundTransparent;
 	}
 }
