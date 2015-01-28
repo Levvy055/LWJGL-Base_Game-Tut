@@ -47,6 +47,11 @@ public class RenderThread extends Thread {
 		this.entities = GameController.instance.getGame().getEntities();
 		try {
 			Display.create();
+			if (!GLContext.getCapabilities().OpenGL11) {
+				System.err
+						.println("Your OpenGL version doesn't support the required functionality.");
+				GameController.stopGame();
+			}
 		}
 		catch (LWJGLException e) {
 			GameLogger.log(Level.SEVERE, e.toString(), e);
