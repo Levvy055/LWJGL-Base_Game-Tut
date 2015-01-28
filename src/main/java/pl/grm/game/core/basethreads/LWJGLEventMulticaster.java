@@ -23,7 +23,7 @@ public class LWJGLEventMulticaster extends Thread {
 	private boolean												finished	= false;
 	private MCType												type		= MCType.NONE;
 	
-	public LWJGLEventMulticaster(MCType type) {
+	private LWJGLEventMulticaster(MCType type) {
 		this.type = type;
 	}
 	

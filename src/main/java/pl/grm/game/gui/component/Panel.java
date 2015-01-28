@@ -1,6 +1,8 @@
-package pl.grm.game.gui;
+package pl.grm.game.gui.component;
 
 import java.util.Iterator;
+
+import pl.grm.game.gui.*;
 
 public class Panel extends Component implements Container {
 	

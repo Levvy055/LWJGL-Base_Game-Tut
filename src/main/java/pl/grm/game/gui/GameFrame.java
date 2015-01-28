@@ -1,23 +1,24 @@
 package pl.grm.game.gui;
 
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRecti;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
-import org.lwjgl.util.Color;
-import org.lwjgl.util.ReadableColor;
+import org.lwjgl.util.*;
 
-public class GameFrame implements Container {
+import pl.grm.game.gui.component.*;
+
+public class GameFrame extends Component implements Container {
 	private HashMap<String, Component>	components;
 	private Color						bgColor;
 	
 	public GameFrame() {
 		this.components = new HashMap<String, Component>();
 		bgColor = (Color) ReadableColor.BLACK;
+	}
+	
+	public GameFrame(int x, int y, int width, int height, String name) {
+		super(x, y, width, height, name);
 	}
 	
 	@Override
@@ -27,13 +28,19 @@ public class GameFrame implements Container {
 		components.put(component.getName(), component);
 	}
 	
+	@Override
 	public void draw() {
-		drawBackground();
+		paint();
 		Iterator<String> iterator = components.keySet().iterator();
 		while (iterator.hasNext()) {
 			Component component = components.get(iterator.next());
 			component.draw();
 		}
+	}
+	
+	@Override
+	protected void paint() {
+		drawBackground();
 	}
 	
 	private void drawBackground() {
@@ -43,10 +50,12 @@ public class GameFrame implements Container {
 		glPopMatrix();
 	}
 	
+	@Override
 	public void setBackgroundColor(Color color) {
 		this.bgColor = color;
 	}
 	
+	@Override
 	public void update() {
 		Iterator<String> iterator = components.keySet().iterator();
 		while (iterator.hasNext()) {

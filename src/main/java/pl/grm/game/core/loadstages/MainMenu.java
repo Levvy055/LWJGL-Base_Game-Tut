@@ -8,10 +8,8 @@ import org.lwjgl.util.ReadableColor;
 
 import pl.grm.game.core.events.KeyEvent;
 import pl.grm.game.core.inputs.GameKeyListener;
-import pl.grm.game.gui.Button;
 import pl.grm.game.gui.GameFrame;
-import pl.grm.game.gui.Label;
-import pl.grm.game.gui.Panel;
+import pl.grm.game.gui.component.*;
 
 public class MainMenu implements ILoadStage {
 	private static ILoadStage		instance;

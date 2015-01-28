@@ -1,20 +1,17 @@
-package pl.grm.game.gui;
+package pl.grm.game.gui.component;
 
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRecti;
+import static org.lwjgl.opengl.GL11.*;
 
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.concurrent.*;
 
-import org.lwjgl.input.Mouse;
+import org.lwjgl.input.*;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.Color;
-import org.lwjgl.util.ReadableColor;
+import org.lwjgl.util.*;
 
-import pl.grm.game.core.basethreads.LWJGLEventMulticaster;
-import pl.grm.game.core.inputs.GameKeyListener;
+import pl.grm.game.core.basethreads.*;
+import pl.grm.game.core.inputs.*;
+import pl.grm.game.gui.*;
 
 public abstract class Component {
 	protected Container								parent;
@@ -37,6 +34,8 @@ public abstract class Component {
 		this.setWidth(width);
 		this.setHeight(height);
 	}
+	
+	public Component() {}
 	
 	protected abstract void paint();
 	
@@ -119,7 +118,6 @@ public abstract class Component {
 		return parent != null ? true : false;
 	}
 	
-	@SuppressWarnings("static-method")
 	protected void drawRect(int x, int y, int width, int height) {
 		glRecti(x, y, x + width, y + height);
 	}
@@ -128,7 +126,7 @@ public abstract class Component {
 		return this.parent;
 	}
 	
-	protected void setParent(Container parent) {
+	public void setParent(Container parent) {
 		this.parent = parent;
 	}
 	

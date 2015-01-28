@@ -1,4 +1,4 @@
-package pl.grm.game.gui;
+package pl.grm.game.gui.component;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glDisable;

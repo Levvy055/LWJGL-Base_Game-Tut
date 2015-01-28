@@ -1,4 +1,4 @@
-package pl.grm.game.gui;
+package pl.grm.game.gui.component;
 
 import org.lwjgl.input.*;
 
