@@ -24,18 +24,22 @@ public class Button extends Component {
 			if (!isPressed()) {
 				setPressed(true);
 				System.out.println("Pressed");
+				MainMenu.buttonQueue.add(this);
 			} else if (!wasPressed()) {
 				setPressedBefore(true);
 				System.out.println("Still pressed");
+				MainMenu.buttonQueue.add(this);
 			}
-			MainMenu.buttonQueue.add(this);
-		} else {
+		} else if (hasFocus()) {
 			if (isPressed()) {
 				setPressed(false);
 			} else if (wasPressed()) {
 				setPressedBefore(false);
 				System.out.println("Released");
+				MainMenu.buttonQueue.add(this);
 			}
+		} else {
+			setPressedBefore(false);
 		}
 	}
 	
