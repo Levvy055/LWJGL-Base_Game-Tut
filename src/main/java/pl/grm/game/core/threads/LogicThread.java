@@ -1,4 +1,4 @@
-package pl.grm.game.core.basethreads;
+package pl.grm.game.core.threads;
 
 import java.util.*;
 
@@ -47,14 +47,14 @@ public class LogicThread extends Thread {
 	}
 	
 	private void introIterate() {
-		Thread.currentThread().setName("Game Intro Logic");
+		Thread.currentThread().setName("Game Intro Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.INTRO) {
 			baseLoop();
 		}
 	}
 	
 	private void mainMenuIterate() {
-		Thread.currentThread().setName("Game Main Menu Logic");
+		Thread.currentThread().setName("Game Main Menu Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.MAIN_MENU) {
 			MainMenu.update();
 			baseLoop();
@@ -62,7 +62,7 @@ public class LogicThread extends Thread {
 	}
 	
 	private void gameLoadingIterate() {
-		Thread.currentThread().setName("Game Loading Logic");
+		Thread.currentThread().setName("Game Loading Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.GAME_LOADING) {
 			baseLoop();
 		}
@@ -72,7 +72,7 @@ public class LogicThread extends Thread {
 	 * Iterates over every event
 	 */
 	private void gameIterator() {
-		Thread.currentThread().setName("Game Logic");
+		Thread.currentThread().setName("Game Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.GAME) {
 			
 			updateEntities();

@@ -1,4 +1,4 @@
-package pl.grm.game.core.basethreads;
+package pl.grm.game.core.threads;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -19,11 +19,10 @@ import com.google.common.collect.*;
 
 public class RenderThread extends Thread {
 	private FPSTimer					timer;
-	// private Queue<Entity> renderQueue;
 	private Multimap<Integer, Entity>	entities;
 	
 	public RenderThread() {
-		super(GameParameters.GAME_TITLE + " Game-Render-Loop");
+		super(GameParameters.GAME_TITLE + " Game-Render-Thread");
 		this.timer = GameController.instance.getFPSTimer();
 	}
 	

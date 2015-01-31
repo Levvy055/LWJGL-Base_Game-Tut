@@ -2,6 +2,8 @@ package pl.grm.game.gui.component;
 
 import org.lwjgl.input.*;
 
+import pl.grm.game.core.loadstages.*;
+
 public class Button extends Component {
 	private boolean	pressed;
 	private boolean	pressedBefore;
@@ -26,6 +28,7 @@ public class Button extends Component {
 				setPressedBefore(true);
 				System.out.println("Still pressed");
 			}
+			MainMenu.buttonQueue.add(this);
 		} else {
 			if (isPressed()) {
 				setPressed(false);

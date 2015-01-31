@@ -9,31 +9,26 @@ import org.lwjgl.util.*;
 import pl.grm.game.gui.component.*;
 
 public class GameFrame extends Component implements Container {
-	private HashMap<String, Component>	components;
-	private Color						bgColor;
+	private Color	bgColor;
 	
 	public GameFrame() {
-		this.components = new HashMap<String, Component>();
+		super();
 		bgColor = (Color) ReadableColor.BLACK;
-	}
-	
-	public GameFrame(int x, int y, int width, int height, String name) {
-		super(x, y, width, height, name);
 	}
 	
 	@Override
 	public void add(Component component) {
 		if (component == null) { return; }
 		component.setParent(this);
-		components.put(component.getName(), component);
+		getChilds().put(component.getName(), component);
 	}
 	
 	@Override
 	public void draw() {
 		paint();
-		Iterator<String> iterator = components.keySet().iterator();
+		Iterator<String> iterator = getChilds().keySet().iterator();
 		while (iterator.hasNext()) {
-			Component component = components.get(iterator.next());
+			Component component = getChilds().get(iterator.next());
 			component.draw();
 		}
 	}
@@ -51,26 +46,32 @@ public class GameFrame extends Component implements Container {
 	}
 	
 	@Override
+	public void update() {
+		Iterator<String> iterator = getChilds().keySet().iterator();
+		while (iterator.hasNext()) {
+			Component component = getChilds().get(iterator.next());
+			component.update();
+		}
+	}
+	
+	@Override
 	public void setBackgroundColor(Color color) {
 		this.bgColor = color;
 	}
 	
 	@Override
-	public void update() {
-		Iterator<String> iterator = components.keySet().iterator();
-		while (iterator.hasNext()) {
-			Component component = components.get(iterator.next());
-			component.update();
-		}
-	}
-	
-	public HashMap<String, Component> getComponents() {
-		return components;
-	}
-	
-	@Override
 	public void reparse() {
-		// TODO Auto-generated method stub
-		
+		for (Iterator<String> it = this.getChilds().keySet().iterator(); it.hasNext();) {
+			Component child = getChilds().get(it.next());
+			int xC = child.getX() + getX();
+			int yC = child.getY() + getY();
+			child.setPosition(xC, yC);
+			if (xC + child.getWidth() > getX() + getWidth()) {
+				this.setWidth(xC + child.getWidth() - getX());
+			}
+			if (xC + child.getHeight() > getY() + getHeight()) {
+				this.setHeight(yC + child.getHeight() - getY());
+			}
+		}
 	}
 }

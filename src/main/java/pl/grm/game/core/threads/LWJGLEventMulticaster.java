@@ -1,4 +1,4 @@
-package pl.grm.game.core.basethreads;
+package pl.grm.game.core.threads;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -15,7 +15,7 @@ import pl.grm.game.core.misc.*;
 public class LWJGLEventMulticaster extends Thread {
 	private static ConcurrentHashMap<Integer, GameKeyListener>	keyListenersHandler;
 	private static ConcurrentHashMap<String, GameKeyListener>	buttonListenersHandler;
-	private static Queue<GameEvent>								gameEventsQueue;
+	private static LinkedBlockingQueue<GameEvent>				gameEventsQueue;
 	private static LWJGLEventMulticaster						eventCollector;
 	private static LWJGLEventMulticaster						eventCaster;
 	private boolean												stopInvoked	= false;
@@ -35,7 +35,7 @@ public class LWJGLEventMulticaster extends Thread {
 			eventCaster = new LWJGLEventMulticaster(MCType.CASTER);
 		}
 		if (gameEventsQueue == null) {
-			gameEventsQueue = new LinkedList<GameEvent>();
+			gameEventsQueue = new LinkedBlockingQueue<GameEvent>();
 		}
 		if (keyListenersHandler == null) {
 			keyListenersHandler = new ConcurrentHashMap<Integer, GameKeyListener>();
@@ -77,23 +77,27 @@ public class LWJGLEventMulticaster extends Thread {
 	public static synchronized void discharge() {
 		long initTime = System.currentTimeMillis();
 		eventCollector.setStopInvoked(true);
-		while (!(eventCollector.isFinished() && eventCaster.isFinished())) {
-			try {
-				sleep(100l);
+		try {
+			while (!(eventCollector.isFinished() && eventCaster.isFinished())) {
+				sleep(10l);
+				
+				if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
+					eventCaster.setStopInvoked(true);
+					sleep(10l);
+					eventCaster.interrupt();
+				}
+				long timeDelay = System.currentTimeMillis() - initTime;
+				if (!eventCaster.isFinished() && timeDelay > 2 * 1000) {
+					eventCaster.setStopInvoked(true);
+					
+				}
+				if (timeDelay > 4 * 1000) {
+					break;
+				}
 			}
-			catch (InterruptedException e) {
-				GameLogger.logException(e);
-			}
-			if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
-				eventCaster.setStopInvoked(true);
-			}
-			long timeDelay = System.currentTimeMillis() - initTime;
-			if (!eventCaster.isFinished() && timeDelay > 2 * 1000) {
-				eventCaster.setStopInvoked(true);
-			}
-			if (timeDelay > 4 * 1000) {
-				break;
-			}
+		}
+		catch (InterruptedException e) {
+			GameLogger.logException(e);
 		}
 		eventCollector = null;
 		eventCaster = null;
@@ -155,20 +159,14 @@ public class LWJGLEventMulticaster extends Thread {
 	
 	private synchronized void castEvents() {
 		while (!isStopInvoked()) {
-			if (!gameEventsQueue.isEmpty()) {
-				
-				System.out.println(gameEventsQueue.size());
-				gameEventsQueue.poll().perform();
-			} else {
-				try {
-					sleep(100l);
-				}
-				catch (InterruptedException e) {
-					GameLogger.logException(e);
-				}
+			System.out.println("Events: " + gameEventsQueue.size());
+			try {
+				sleep(100l);
+				gameEventsQueue.take().perform();
 			}
-			Iterator<GameEvent> iterator = gameEventsQueue.iterator();
-			System.out.print("");
+			catch (InterruptedException e) {
+				// GameLogger.logException(e);
+			}
 		}
 		setFinished(true);
 	}

@@ -9,13 +9,13 @@ import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
 import pl.grm.game.core.*;
-import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.config.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.misc.*;
 import pl.grm.game.core.misc.timers.*;
+import pl.grm.game.core.threads.*;
 
 import com.google.common.collect.*;
 
@@ -88,8 +88,6 @@ public class GameFactory {
 		HashMultimap<Integer, Entity> entityMap = HashMultimap.create();
 		game.setEvents(new PriorityQueue<GameEvent>());
 		game.setEntities(entityMap);
-		// efgame.setRenderQueue(new
-		// PriorityQueue<Entity>(GameParameters.RENDER_QUEUE_CAPACITY));
 		return game;
 	}
 	

@@ -9,18 +9,19 @@ import org.lwjgl.input.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.*;
 
-import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.inputs.*;
+import pl.grm.game.core.threads.*;
 import pl.grm.game.gui.*;
 
 public abstract class Component {
 	protected Container								parent;
-	protected ConcurrentHashMap<String, Component>	childs					= new ConcurrentHashMap<String, Component>();
+	private ConcurrentHashMap<String, Component>	childs					= new ConcurrentHashMap<String, Component>();
 	protected int									x						= 0;
 	protected int									y						= 0;
 	protected int									width					= 64;
 	protected int									height					= 64;
-	protected Color									backgroundColor			= (Color) ReadableColor.GREY;
+	protected Color									backgroundColor			= (Color) ReadableColor.PURPLE;
+	protected Color									focusBackgroundColor	= (Color) ReadableColor.LTGREY;
 	private boolean									backgroundTransparent	= false;
 	protected Color									foregroundColor			= (Color) ReadableColor.WHITE;
 	protected boolean								visible					= true;
@@ -37,16 +38,16 @@ public abstract class Component {
 	
 	public Component() {}
 	
-	protected abstract void paint();
-	
 	public void draw() {
 		if (isEnabled() && isVisible()) {
 			if (!isBackgroundTransparent()) {
-				glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
-						backgroundColor.getBlue());
-			}
-			if (hasFocus()) {
-				glColor3f(1f, 0f, 0f);
+				if (hasFocus()) {
+					glColor3f(focusBackgroundColor.getRed(), focusBackgroundColor.getGreen(),
+							focusBackgroundColor.getBlue());
+				} else {
+					glColor3f(backgroundColor.getRed(), backgroundColor.getGreen(),
+							backgroundColor.getBlue());
+				}
 			}
 			glPushMatrix();
 			paint();
@@ -59,6 +60,8 @@ public abstract class Component {
 			}
 		}
 	}
+	
+	protected abstract void paint();
 	
 	public void update() {
 		if (isEnabled()) {
@@ -105,8 +108,8 @@ public abstract class Component {
 	}
 	
 	public synchronized void setSize(int s) {
-		setWidth(getWidth() * s);
-		setHeight(getHeight() * s);
+		setWidth(width * s);
+		setHeight(height * s);
 	}
 	
 	public synchronized void setSize(int width, int height) {
@@ -114,12 +117,12 @@ public abstract class Component {
 		setHeight(height);
 	}
 	
-	public boolean hasParent() {
-		return parent != null ? true : false;
-	}
-	
 	protected void drawRect(int x, int y, int width, int height) {
 		glRecti(x, y, x + width, y + height);
+	}
+	
+	public boolean hasParent() {
+		return parent != null ? true : false;
 	}
 	
 	public Container getParent() {
@@ -216,5 +219,13 @@ public abstract class Component {
 	
 	public void setBackgroundTransparent(boolean backgroundTransparent) {
 		this.backgroundTransparent = backgroundTransparent;
+	}
+	
+	public ConcurrentHashMap<String, Component> getChilds() {
+		return childs;
+	}
+	
+	public void setChilds(ConcurrentHashMap<String, Component> childs) {
+		this.childs = childs;
 	}
 }

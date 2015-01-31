@@ -1,13 +1,10 @@
 package pl.grm.game.gui.component;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.*;
 
-import pl.grm.game.core.misc.Fonts;
+import pl.grm.game.core.misc.*;
 
 public class Label extends Component {
 	private String			text		= getName();
@@ -18,18 +15,18 @@ public class Label extends Component {
 	
 	public Label(int x, int y, int width, int height, String name) {
 		super(x, y, width, height, name);
+		setText(name);
 	}
 	
 	@Override
 	protected void paint() {
 		setFont(Fonts.getFont(0));
-		if (getText().length() * 17 > getWidth()) {
-			setWidth(getText().length() * 17);
+		if (font.getWidth(text) > getWidth()) {
+			setWidth(font.getWidth(text));
 			getParent().reparse();
 		}
 		glEnable(GL_TEXTURE_2D);
-		font.drawString(getX() + getTextPosX(), getY() + getTextPosY(), getText(),
-				getFontColor());
+		font.drawString(getX() + textPosX, getY() + getTextPosY(), text, fontColor);
 		glDisable(GL_TEXTURE_2D);
 	}
 	

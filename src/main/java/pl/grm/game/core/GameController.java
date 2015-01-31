@@ -3,13 +3,13 @@ package pl.grm.game.core;
 import java.awt.event.*;
 import java.util.*;
 
-import pl.grm.game.core.basethreads.*;
 import pl.grm.game.core.entities.*;
 import pl.grm.game.core.events.*;
 import pl.grm.game.core.factory.*;
 import pl.grm.game.core.loadstages.*;
 import pl.grm.game.core.misc.*;
 import pl.grm.game.core.misc.timers.*;
+import pl.grm.game.core.threads.*;
 
 import com.google.common.collect.*;
 

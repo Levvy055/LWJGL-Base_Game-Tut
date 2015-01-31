@@ -1,25 +1,27 @@
 package pl.grm.game.core.loadstages;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
+import java.util.concurrent.*;
 
-import org.lwjgl.util.Color;
-import org.lwjgl.util.ReadableColor;
+import org.lwjgl.util.*;
 
-import pl.grm.game.core.events.KeyEvent;
-import pl.grm.game.core.inputs.GameKeyListener;
-import pl.grm.game.gui.GameFrame;
+import pl.grm.game.core.*;
+import pl.grm.game.core.events.*;
+import pl.grm.game.core.inputs.*;
+import pl.grm.game.gui.*;
 import pl.grm.game.gui.component.*;
 
 public class MainMenu implements ILoadStage {
-	private static ILoadStage		instance;
-	private static boolean			running	= false;
-	private GameFrame				frame;
-	private static Queue<Button>	buttonEventsQueue;
+	private static ILoadStage	instance;
+	private static boolean		running		= false;
+	private GameFrame			frame;
+	public static Queue<Button>	buttonQueue;
+	private static Button		currentTempButttoon;
+	private boolean				initialized	= false;
 	
 	private MainMenu() {
 		frame = new GameFrame();
-		buttonEventsQueue = new LinkedList<Button>();
+		buttonQueue = new ConcurrentLinkedQueue<Button>();
 	}
 	
 	public static void startStage() {
@@ -38,51 +40,50 @@ public class MainMenu implements ILoadStage {
 	
 	@Override
 	public void render() {
-		if (frame.getComponents().isEmpty()) { return; }
+		if (!isInitialized()) { return; }
 		frame.draw();
 	}
 	
 	public static void update() {
-		if (((MainMenu) instance).frame.getComponents().isEmpty()) {
-			((MainMenu) instance).setupFrame();
+		MainMenu instanceE = (MainMenu) instance;
+		if (!instanceE.isInitialized()) {
+			instanceE.setupFrame();
+			instanceE.setInitialized(true);
 		}
-		((MainMenu) instance).frame.update();
+		instanceE.frame.update();
 	}
 	
 	private void setupFrame() {
-		Panel btPanel = new Panel(400, 400, 100, 100, "ButtonsPanel");
-		Button closeButton = new Button(5, 5, 50, 25, "Close");
+		Panel titlePanel = new Panel(50, 50, 100, 200, "TitlePanel");
+		Panel buttonsPanel = new Panel(400, 400, 100, 200, "ButtonsPanel");
+		frame.add(buttonsPanel);
+		frame.add(titlePanel);
+		
+		Button closeButton = new Button(5, 5, 50, 25, "CloseButton");
 		closeButton.setBackgroundColor((Color) ReadableColor.ORANGE);
 		closeButton.addActionListener(new GameKeyListener() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
+			public void keyTyped(KeyEvent e) {}
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
+				GameController.stopGame();
 			}
 			
 			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
+			public void keyPressed(KeyEvent e) {}
 		});
-		btPanel.add(closeButton);
-		frame.add(btPanel);
-		Panel titlePanel = new Panel(100, 50, 100, 20, "Title Panel");
-		Label titleLabel = new Label(0, 0, 100, 20, "Title Label");
-		titleLabel.setText("THE LWJGL JAVA GAME");
-		titleLabel.setFontColor(org.newdawn.slick.Color.green);
-		titlePanel.add(titleLabel);
-		Label titleLabel2 = new Label(0, 100, 100, 20, "Title 2 Label");
+		buttonsPanel.add(closeButton);
+		
+		Label titleLabel1 = new Label(0, 0, 100, 10, "TitleLabel");
+		titleLabel1.setText("THE LWJGL JAVA GAME");
+		titleLabel1.setFontColor(org.newdawn.slick.Color.green);
+		titlePanel.add(titleLabel1);
+		
+		Label titleLabel2 = new Label(0, 100, 100, 10, "Title2Label");
 		titleLabel2.setText("Main Menu!");
 		titleLabel2.setFontColor(org.newdawn.slick.Color.green);
 		titlePanel.add(titleLabel2);
-		
-		frame.add(titlePanel);
-		
 	}
 	
 	public static boolean isRunning() {
@@ -90,20 +91,27 @@ public class MainMenu implements ILoadStage {
 	}
 	
 	public static boolean next() {
-		return !buttonEventsQueue.isEmpty();
+		return !buttonQueue.isEmpty();
 	}
 	
 	public static String getEventButton() {
-		return buttonEventsQueue.poll().getName();
+		currentTempButttoon = buttonQueue.poll();
+		return currentTempButttoon.getName();
 	}
 	
 	public static boolean getEventKeyState() {
-		// TODO Auto-generated method stub
-		return false;
+		return currentTempButttoon.isPressed();
 	}
 	
 	public static boolean isRepeatEvent() {
-		// TODO Auto-generated method stub
-		return false;
+		return currentTempButttoon.wasPressed();
+	}
+	
+	public boolean isInitialized() {
+		return initialized;
+	}
+	
+	public void setInitialized(boolean initialized) {
+		this.initialized = initialized;
 	}
 }
