@@ -1,5 +1,7 @@
 package pl.grm.game.gui.component;
 
+import javax.swing.*;
+
 import org.lwjgl.input.*;
 
 import pl.grm.game.core.loadstages.*;
@@ -19,6 +21,7 @@ public class Button extends Component {
 	
 	@Override
 	public void update() {
+		new JFrame().addWindowListener(null);
 		super.update();
 		if (hasFocus() && Mouse.isButtonDown(0)) {
 			if (!isPressed()) {

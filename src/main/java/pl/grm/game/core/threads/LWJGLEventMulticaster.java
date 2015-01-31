@@ -71,39 +71,6 @@ public class LWJGLEventMulticaster extends Thread {
 		}
 	}
 	
-	/**
-	 * Stops the event caster
-	 */
-	public static synchronized void discharge() {
-		long initTime = System.currentTimeMillis();
-		eventCollector.setStopInvoked(true);
-		try {
-			while (!(eventCollector.isFinished() && eventCaster.isFinished())) {
-				sleep(10l);
-				
-				if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
-					eventCaster.setStopInvoked(true);
-					sleep(10l);
-					eventCaster.interrupt();
-				}
-				long timeDelay = System.currentTimeMillis() - initTime;
-				if (!eventCaster.isFinished() && timeDelay > 2 * 1000) {
-					eventCaster.setStopInvoked(true);
-					
-				}
-				if (timeDelay > 4 * 1000) {
-					break;
-				}
-			}
-		}
-		catch (InterruptedException e) {
-			GameLogger.logException(e);
-		}
-		eventCollector = null;
-		eventCaster = null;
-		setInitialised(false);
-	}
-	
 	private synchronized void collectEvents() {
 		while (!isStopInvoked()) {
 			if (!Keyboard.isCreated()) {
@@ -159,16 +126,52 @@ public class LWJGLEventMulticaster extends Thread {
 	
 	private synchronized void castEvents() {
 		while (!isStopInvoked()) {
-			System.out.println("Events: " + gameEventsQueue.size());
 			try {
-				sleep(100l);
 				gameEventsQueue.take().perform();
 			}
 			catch (InterruptedException e) {
-				// GameLogger.logException(e);
+				GameLogger.logException(e);
 			}
 		}
 		setFinished(true);
+	}
+	
+	/**
+	 * Stops the event caster
+	 */
+	public static synchronized void discharge() {
+		long initTime = System.currentTimeMillis();
+		eventCollector.setStopInvoked(true);
+		try {
+			while (!(eventCollector.isFinished() && eventCaster.isFinished())) {
+				sleep(10l);
+				
+				if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
+					eventCaster.setStopInvoked(true);
+					sleep(10l);
+					gameEventsQueue.add(new GameEvent() {
+						@Override
+						public void perform() {
+							GameLogger.info("Last event");
+						}
+					});
+				}
+				long timeDelay = System.currentTimeMillis() - initTime;
+				if (!eventCaster.isFinished() && timeDelay > 2 * 1000) {
+					eventCaster.setStopInvoked(true);
+					
+				}
+				if (timeDelay > 4 * 1000) {
+					break;
+				}
+			}
+		}
+		catch (InterruptedException e) {
+			GameLogger.logException(e);
+		}
+		eventCollector = null;
+		eventCaster = null;
+		setInitialised(false);
 	}
 	
 	public static void addKeyListener(int key, GameKeyListener keyListener) {

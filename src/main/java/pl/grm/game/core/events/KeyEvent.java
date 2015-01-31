@@ -34,7 +34,6 @@ public class KeyEvent implements GameEvent {
 	@Override
 	public void perform() {
 		for (GameListener gameKeyListener : listeners) {
-			System.out.println("listener performed");
 			if (isEventKeyState()) {
 				if (isRepeatEvent()) {
 					((GameKeyListener) gameKeyListener).keyTyped(this);
