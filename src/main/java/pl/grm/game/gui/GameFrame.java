@@ -12,7 +12,7 @@ public class GameFrame extends Component implements Container {
 	private Color	bgColor;
 	
 	public GameFrame() {
-		super();
+		super("Game Main Menu Frame");
 		bgColor = (Color) ReadableColor.BLACK;
 	}
 	
@@ -63,15 +63,7 @@ public class GameFrame extends Component implements Container {
 	public void reparse() {
 		for (Iterator<String> it = this.getChilds().keySet().iterator(); it.hasNext();) {
 			Component child = getChilds().get(it.next());
-			int xC = child.getX() + getX();
-			int yC = child.getY() + getY();
-			child.setPosition(xC, yC);
-			if (xC + child.getWidth() > getX() + getWidth()) {
-				this.setWidth(xC + child.getWidth() - getX());
-			}
-			if (xC + child.getHeight() > getY() + getHeight()) {
-				this.setHeight(yC + child.getHeight() - getY());
-			}
+			// TODO adjust parent to its children params
 		}
 	}
 }

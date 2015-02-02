@@ -13,7 +13,7 @@ public class Panel extends Component implements Container {
 	
 	@Override
 	public void paint() {
-		drawRect(getX(), getY(), getWidth(), getHeight());
+		drawRect(coords.getX1(), coords.getY1(), coords.getWidth(), coords.getHeight());
 	}
 	
 	@Override
@@ -26,15 +26,7 @@ public class Panel extends Component implements Container {
 	public void reparse() {
 		for (Iterator<String> it = this.getChilds().keySet().iterator(); it.hasNext();) {
 			Component child = getChilds().get(it.next());
-			int xC = child.getX() + getX();
-			int yC = child.getY() + getY();
-			child.setPosition(xC, yC);
-			if (xC + child.getWidth() > getX() + getWidth()) {
-				this.setWidth(xC + child.getWidth() - getX());
-			}
-			if (xC + child.getHeight() > getY() + getHeight()) {
-				this.setHeight(yC + child.getHeight() - getY());
-			}
+			child.update();
 		}
 	}
 }

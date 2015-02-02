@@ -12,17 +12,15 @@ import org.lwjgl.util.*;
 import pl.grm.game.core.inputs.*;
 import pl.grm.game.core.threads.*;
 import pl.grm.game.gui.*;
+import pl.grm.game.math.*;
 
 public abstract class Component {
 	protected Container								parent;
-	private ConcurrentHashMap<String, Component>	childs					= new ConcurrentHashMap<String, Component>();
-	protected int									x						= 0;
-	protected int									y						= 0;
-	protected int									width					= 64;
-	protected int									height					= 64;
+	protected ConcurrentHashMap<String, Component>	childs					= new ConcurrentHashMap<String, Component>();
+	protected Coordinates2D							coords					= new Coordinates2D();
 	protected Color									backgroundColor			= (Color) ReadableColor.PURPLE;
 	protected Color									focusBackgroundColor	= (Color) ReadableColor.LTGREY;
-	private boolean									backgroundTransparent	= false;
+	protected boolean								backgroundTransparent	= false;
 	protected Color									foregroundColor			= (Color) ReadableColor.WHITE;
 	protected boolean								visible					= true;
 	protected boolean								enabled					= true;
@@ -32,11 +30,18 @@ public abstract class Component {
 	public Component(int x, int y, int width, int height, String name) {
 		this.setName(name);
 		this.setPosition(x, y);
-		this.setWidth(width);
-		this.setHeight(height);
+		this.coords.setWidth(width);
+		this.coords.setHeight(height);
+		this.updateCoords();
 	}
 	
-	public Component() {}
+	public Component(int x, int y, String name) {
+		this(x, y, 64, 64, name);
+	}
+	
+	public Component(String name) {
+		this(0, 0, name);
+	}
 	
 	public void draw() {
 		if (isEnabled() && isVisible()) {
@@ -67,10 +72,10 @@ public abstract class Component {
 		if (isEnabled()) {
 			int mX = Mouse.getX();
 			int mY = Display.getHeight() - Mouse.getY();
-			int x1 = getX();
-			int x2 = getX() + getWidth();
-			int y1 = getY();
-			int y2 = getY() + getHeight();
+			int x1 = coords.getRX1();
+			int x2 = coords.getRX2();
+			int y1 = coords.getRY1();
+			int y2 = coords.getRY2();
 			boolean xT = mX > x1 && mX < x2;
 			boolean yT = mY > y1 && mY < y2;
 			if (xT && yT) {
@@ -90,6 +95,7 @@ public abstract class Component {
 	protected void addChild(Component child) {
 		if (this instanceof Container) {
 			child.setParent((Container) this);
+			child.getCoords().setCoordinateSystem(coords);
 			this.childs.put(child.getName(), child);
 		}
 	}
@@ -98,27 +104,37 @@ public abstract class Component {
 		LWJGLEventMulticaster.addButtonListener(this.getName(), gameButtonListener);
 	}
 	
-	public boolean hasChilds() {
-		return !childs.isEmpty();
+	public synchronized void setLocationByMid(int x, int y) {
+		setPosition(2 * x - coords.getWidth() / 2, 2 * y - coords.getHeight() / 2);// TODO
 	}
 	
-	public synchronized void setPosition(int x, int y) {
-		this.setX(x);
-		this.setY(y);
+	public synchronized void setPosition(int x1, int y1) {
+		this.coords.setX1(x1);
+		this.coords.setY1(y1);
 	}
 	
 	public synchronized void setSize(int s) {
-		setWidth(width * s);
-		setHeight(height * s);
+		coords.setWidth(coords.getWidth() * s);
+		coords.setHeight(coords.getHeight() * s);
 	}
 	
 	public synchronized void setSize(int width, int height) {
-		setWidth(width);
-		setHeight(height);
+		coords.setWidth(width);
+		coords.setHeight(height);
+	}
+	
+	private void updateCoords() {
+		if (hasParent()) {
+			coords.setCoordinateSystem(((Component) parent).getCoords());
+		}
 	}
 	
 	protected void drawRect(int x, int y, int width, int height) {
 		glRecti(x, y, x + width, y + height);
+	}
+	
+	public boolean hasChilds() {
+		return !childs.isEmpty();
 	}
 	
 	public boolean hasParent() {
@@ -131,38 +147,6 @@ public abstract class Component {
 	
 	public void setParent(Container parent) {
 		this.parent = parent;
-	}
-	
-	public int getX() {
-		return this.x;
-	}
-	
-	public void setX(int x) {
-		this.x = x;
-	}
-	
-	public int getY() {
-		return this.y;
-	}
-	
-	public void setY(int y) {
-		this.y = y;
-	}
-	
-	public int getWidth() {
-		return this.width;
-	}
-	
-	public void setWidth(int width) {
-		this.width = width;
-	}
-	
-	public int getHeight() {
-		return this.height;
-	}
-	
-	public void setHeight(int height) {
-		this.height = height;
 	}
 	
 	public Color getBackgroundColor() {
@@ -225,7 +209,7 @@ public abstract class Component {
 		return childs;
 	}
 	
-	public void setChilds(ConcurrentHashMap<String, Component> childs) {
-		this.childs = childs;
+	public Coordinates2D getCoords() {
+		return this.coords;
 	}
 }

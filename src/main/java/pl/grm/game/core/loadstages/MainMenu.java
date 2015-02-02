@@ -3,11 +3,6 @@ package pl.grm.game.core.loadstages;
 import java.util.*;
 import java.util.concurrent.*;
 
-import org.lwjgl.util.*;
-
-import pl.grm.game.core.*;
-import pl.grm.game.core.events.*;
-import pl.grm.game.core.inputs.*;
 import pl.grm.game.gui.*;
 import pl.grm.game.gui.component.*;
 
@@ -54,36 +49,7 @@ public class MainMenu implements ILoadStage {
 	}
 	
 	private void setupFrame() {
-		Panel titlePanel = new Panel(50, 50, 100, 200, "TitlePanel");
-		Panel buttonsPanel = new Panel(400, 400, 100, 200, "ButtonsPanel");
-		frame.add(buttonsPanel);
-		frame.add(titlePanel);
-		
-		Button closeButton = new Button(5, 5, 50, 25, "CloseButton");
-		closeButton.setBackgroundColor((Color) ReadableColor.ORANGE);
-		closeButton.addActionListener(new GameKeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				GameController.stopGame();
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {}
-		});
-		buttonsPanel.add(closeButton);
-		
-		Label titleLabel1 = new Label(0, 0, 100, 10, "TitleLabel");
-		titleLabel1.setText("THE LWJGL JAVA GAME");
-		titleLabel1.setFontColor(org.newdawn.slick.Color.green);
-		titlePanel.add(titleLabel1);
-		
-		Label titleLabel2 = new Label(0, 100, 100, 10, "Title2Label");
-		titleLabel2.setText("Main Menu!");
-		titleLabel2.setFontColor(org.newdawn.slick.Color.green);
-		titlePanel.add(titleLabel2);
+		FrameSetupData.setupFrame(frame);
 	}
 	
 	public static boolean isRunning() {
@@ -104,7 +70,7 @@ public class MainMenu implements ILoadStage {
 	}
 	
 	public static boolean isRepeatEvent() {
-		return currentTempButttoon.wasPressed();
+		return currentTempButttoon.isRepeatEvent();
 	}
 	
 	public boolean isInitialized() {

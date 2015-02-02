@@ -1,49 +1,62 @@
 package pl.grm.game.gui.component;
 
-import javax.swing.*;
-
 import org.lwjgl.input.*;
 
 import pl.grm.game.core.loadstages.*;
 
 public class Button extends Component {
-	private boolean	pressed;
-	private boolean	pressedBefore;
+	private boolean		pressed;
+	private KeyState	currentState	= KeyState.RELEASED;
+	private KeyState	lastState		= KeyState.RELEASED;
 	
 	public Button(int x, int y, int width, int height, String name) {
 		super(x, y, width, height, name);
 	}
 	
+	public Button(String name) {
+		super(name);
+	}
+	
 	@Override
 	public void paint() {
-		drawRect(getX(), getY(), getWidth(), getHeight());
+		drawRect(coords.getRX1(), coords.getRY1(), coords.getWidth(), coords.getHeight());
 	}
 	
 	@Override
 	public void update() {
-		new JFrame().addWindowListener(null);
 		super.update();
-		if (hasFocus() && Mouse.isButtonDown(0)) {
-			if (!isPressed()) {
-				setPressed(true);
-				System.out.println("Pressed");
-				MainMenu.buttonQueue.add(this);
-			} else if (!wasPressed()) {
-				setPressedBefore(true);
+		System.out.println(coords.toString());
+		if (Mouse.isCreated()) {
+			boolean btnDown = Mouse.isButtonDown(0);
+			boolean focus = hasFocus();
+			if (focus && btnDown && isPressed()) {
 				System.out.println("Still pressed");
 				MainMenu.buttonQueue.add(this);
-			}
-		} else if (hasFocus()) {
-			if (isPressed()) {
+			} else if (focus && !btnDown && isPressed()) {
 				setPressed(false);
-			} else if (wasPressed()) {
-				setPressedBefore(false);
 				System.out.println("Released");
+				currentState = KeyState.RELEASED;
 				MainMenu.buttonQueue.add(this);
+			} else if (focus && btnDown && !isPressed()) {
+				setPressed(true);
+				System.out.println("Pressed");
+				currentState = KeyState.PRESSED;
+				MainMenu.buttonQueue.add(this);
+			} else if (!focus && btnDown && isPressed()) {
+				setPressed(false);
+				currentState = KeyState.RELEASED;
+				System.out.println("Released Off");
 			}
-		} else {
-			setPressedBefore(false);
+			
+			if (!currentState.equals(lastState)) {
+				lastState = currentState;
+			}
 		}
+	}
+	
+	private enum KeyState {
+		PRESSED ,
+		RELEASED
 	}
 	
 	public boolean isPressed() {
@@ -54,11 +67,7 @@ public class Button extends Component {
 		this.pressed = pressed;
 	}
 	
-	public boolean wasPressed() {
-		return pressedBefore;
-	}
-	
-	public void setPressedBefore(boolean pressedBefore) {
-		this.pressedBefore = pressedBefore;
+	public boolean isRepeatEvent() {
+		return lastState.equals(KeyState.PRESSED);
 	}
 }

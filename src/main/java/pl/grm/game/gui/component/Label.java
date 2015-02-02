@@ -21,12 +21,13 @@ public class Label extends Component {
 	@Override
 	protected void paint() {
 		setFont(Fonts.getFont(0));
-		if (font.getWidth(text) > getWidth()) {
-			setWidth(font.getWidth(text));
+		if (font.getWidth(text) > coords.getWidth()) {
+			coords.setWidth(font.getWidth(text));
 			getParent().reparse();
 		}
 		glEnable(GL_TEXTURE_2D);
-		font.drawString(getX() + textPosX, getY() + getTextPosY(), text, fontColor);
+		font.drawString(coords.getX1() + textPosX, coords.getY1() + getTextPosY(), text,
+				fontColor);
 		glDisable(GL_TEXTURE_2D);
 	}
 	
