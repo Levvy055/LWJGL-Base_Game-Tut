@@ -2,22 +2,10 @@ package pl.grm.game.core.loadstages;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class GameLoading implements ILoadStage {
-	private static ILoadStage	instance;
-	private static boolean		running	= false;
+public class GameLoading extends LoadGameStage {
 	
-	public static void startStage() {
-		instance = new GameLoading();
-		running = true;
-	}
-	
-	public static void stopStage() {
-		instance = null;
-		running = false;
-	}
-	
-	public static void renderStage() {
-		instance.render();
+	protected GameLoading() {
+		
 	}
 	
 	@Override
@@ -34,7 +22,10 @@ public class GameLoading implements ILoadStage {
 		glPopMatrix();
 	}
 	
-	public static boolean isRunning() {
-		return running;
+	@Override
+	protected void update() {
+		if (!isInitialized()) {
+			setInitialized(true);
+		}
 	}
 }

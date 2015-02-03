@@ -49,6 +49,7 @@ public class LogicThread extends Thread {
 	private void introIterate() {
 		Thread.currentThread().setName("Game Intro Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.INTRO) {
+			LoadGameStage.updateStage();
 			baseLoop();
 		}
 	}
@@ -56,7 +57,7 @@ public class LogicThread extends Thread {
 	private void mainMenuIterate() {
 		Thread.currentThread().setName("Game Main Menu Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.MAIN_MENU) {
-			MainMenu.update();
+			LoadGameStage.updateStage();
 			baseLoop();
 		}
 	}
@@ -64,6 +65,7 @@ public class LogicThread extends Thread {
 	private void gameLoadingIterate() {
 		Thread.currentThread().setName("Game Loading Logic Thread");
 		while (GameController.getGameStage() == GameLoadStage.GAME_LOADING) {
+			LoadGameStage.updateStage();
 			baseLoop();
 		}
 	}

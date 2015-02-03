@@ -104,8 +104,8 @@ public abstract class Component {
 		LWJGLEventMulticaster.addButtonListener(this.getName(), gameButtonListener);
 	}
 	
-	public synchronized void setLocationByMid(int x, int y) {
-		setPosition(2 * x - coords.getWidth() / 2, 2 * y - coords.getHeight() / 2);// TODO
+	public synchronized void setLocationByCenterInPoint(int x, int y) {
+		setPosition(2 * x - coords.getWidth() / 2, 2 * y - coords.getHeight() / 2);
 	}
 	
 	public synchronized void setPosition(int x1, int y1) {
@@ -123,7 +123,7 @@ public abstract class Component {
 		coords.setHeight(height);
 	}
 	
-	private void updateCoords() {
+	public void updateCoords() {
 		if (hasParent()) {
 			coords.setCoordinateSystem(((Component) parent).getCoords());
 		}
@@ -211,5 +211,13 @@ public abstract class Component {
 	
 	public Coordinates2D getCoords() {
 		return this.coords;
+	}
+	
+	public Color getFocusBackgroundColor() {
+		return focusBackgroundColor;
+	}
+	
+	public void setFocusBackgroundColor(Color focusBackgroundColor) {
+		this.focusBackgroundColor = focusBackgroundColor;
 	}
 }

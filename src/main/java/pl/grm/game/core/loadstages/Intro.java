@@ -14,31 +14,14 @@ import pl.grm.game.core.factory.*;
 import pl.grm.game.core.misc.*;
 import pl.grm.game.core.misc.timers.*;
 
-public class Intro implements ILoadStage {
-	private static ILoadStage		instance;
-	private static boolean			running		= false;
+public class Intro extends LoadGameStage {
 	private static List<Texture>	textures	= new ArrayList<Texture>();
 	private TickTimer				timer;
 	private boolean					isAfterFirstRender;
 	private Texture					texture;
 	
-	private Intro() {
+	Intro() {
 		timer = new TickTimer();
-		startAnimationThread();
-	}
-	
-	public static void startStage() {
-		running = true;
-		instance = new Intro();
-	}
-	
-	public static void stopStage() {
-		instance = null;
-		running = false;
-	}
-	
-	public static void renderStage() {
-		instance.render();
 	}
 	
 	@Override
@@ -72,6 +55,14 @@ public class Intro implements ILoadStage {
 		glTexCoord2f(0, 1);
 		glVertex2f(0, tHeight);
 		glEnd();
+	}
+	
+	@Override
+	protected void update() {
+		if (!isInitialized()) {
+			startAnimationThread();
+			setInitialized(true);
+		}
 	}
 	
 	public void loadImages() throws IOException {
@@ -116,9 +107,5 @@ public class Intro implements ILoadStage {
 				}
 			}
 		}).start();
-	}
-	
-	public static boolean isRunning() {
-		return running;
 	}
 }

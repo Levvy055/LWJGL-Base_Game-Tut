@@ -97,7 +97,7 @@ public class GameFactory {
 	 * @param gameController
 	 */
 	public static void startGame(GameController gameController) {
-		changeLoadStageTo(GameLoadStage.MAIN_MENU);
+		changeLoadStageTo(GameLoadStage.INTRO);
 		gameController.setRunning(true);
 		LWJGLEventMulticaster.init();
 		ConfigFile.loadDefaults();
@@ -108,29 +108,8 @@ public class GameFactory {
 	}
 	
 	public static void changeLoadStageTo(GameLoadStage stage) {
+		LoadGameStage.prepareStage(stage);
+		LoadGameStage.startNewStage();
 		GameController.instance.setGameLoadStage(stage);
-		switch (stage) {
-			case INTRO :
-				Intro.startStage();
-				MainMenu.stopStage();
-				GameLoading.stopStage();
-				break;
-			case MAIN_MENU :
-				MainMenu.startStage();
-				Intro.stopStage();
-				GameLoading.stopStage();
-				break;
-			case GAME_LOADING :
-				GameLoading.startStage();
-				MainMenu.stopStage();
-				Intro.stopStage();
-				break;
-			case CLOSING :
-				GameLoading.stopStage();
-				MainMenu.stopStage();
-				Intro.stopStage();
-			default :
-				break;
-		}
 	}
 }

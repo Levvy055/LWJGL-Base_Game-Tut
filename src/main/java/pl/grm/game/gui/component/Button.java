@@ -1,6 +1,7 @@
 package pl.grm.game.gui.component;
 
 import org.lwjgl.input.*;
+import org.lwjgl.util.*;
 
 import pl.grm.game.core.loadstages.*;
 
@@ -11,10 +12,12 @@ public class Button extends Component {
 	
 	public Button(int x, int y, int width, int height, String name) {
 		super(x, y, width, height, name);
+		setFocusBackgroundColor((Color) ReadableColor.CYAN);
 	}
 	
 	public Button(String name) {
 		super(name);
+		setFocusBackgroundColor((Color) ReadableColor.CYAN);
 	}
 	
 	@Override
@@ -25,7 +28,6 @@ public class Button extends Component {
 	@Override
 	public void update() {
 		super.update();
-		System.out.println(coords.toString());
 		if (Mouse.isCreated()) {
 			boolean btnDown = Mouse.isButtonDown(0);
 			boolean focus = hasFocus();

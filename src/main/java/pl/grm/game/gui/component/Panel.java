@@ -26,7 +26,7 @@ public class Panel extends Component implements Container {
 	public void reparse() {
 		for (Iterator<String> it = this.getChilds().keySet().iterator(); it.hasNext();) {
 			Component child = getChilds().get(it.next());
-			child.update();
+			child.updateCoords();
 		}
 	}
 }
