@@ -28,7 +28,7 @@ public class FrameSetupData {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				GameFactory.changeLoadStageTo(GameLoadStage.GAME_LOADING);
+				GameFactory.changeLoadGameStageTo(GameLoadStage.GAME_LOADING);
 			}
 			
 			@Override

@@ -145,7 +145,6 @@ public class LWJGLEventMulticaster extends Thread {
 		try {
 			while (!(eventCollector.isFinished() && eventCaster.isFinished())) {
 				sleep(10l);
-				
 				if (eventCollector.isFinished() && gameEventsQueue.isEmpty()) {
 					eventCaster.setStopInvoked(true);
 					sleep(10l);
@@ -159,7 +158,6 @@ public class LWJGLEventMulticaster extends Thread {
 				long timeDelay = System.currentTimeMillis() - initTime;
 				if (!eventCaster.isFinished() && timeDelay > 2 * 1000) {
 					eventCaster.setStopInvoked(true);
-					
 				}
 				if (timeDelay > 4 * 1000) {
 					break;

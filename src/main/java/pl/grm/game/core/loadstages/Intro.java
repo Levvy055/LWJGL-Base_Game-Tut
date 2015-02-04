@@ -102,7 +102,7 @@ public class Intro extends LoadGameStage {
 					timer.sync();
 					currentTick++;
 					if (currentTick >= maxAnimTickTime) {
-						GameFactory.changeLoadStageTo(GameLoadStage.MAIN_MENU);
+						GameFactory.changeLoadGameStageTo(GameLoadStage.MAIN_MENU);
 					}
 				}
 			}

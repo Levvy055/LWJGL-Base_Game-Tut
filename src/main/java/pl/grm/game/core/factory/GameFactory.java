@@ -97,7 +97,7 @@ public class GameFactory {
 	 * @param gameController
 	 */
 	public static void startGame(GameController gameController) {
-		changeLoadStageTo(GameLoadStage.INTRO);
+		changeLoadGameStageTo(GameLoadStage.INTRO);
 		gameController.setRunning(true);
 		LWJGLEventMulticaster.init();
 		ConfigFile.loadDefaults();
@@ -107,7 +107,7 @@ public class GameFactory {
 		LWJGLEventMulticaster.startMulitCaster();
 	}
 	
-	public static void changeLoadStageTo(GameLoadStage stage) {
+	public static void changeLoadGameStageTo(GameLoadStage stage) {
 		LoadGameStage.prepareStage(stage);
 		LoadGameStage.startNewStage();
 		GameController.instance.setGameLoadStage(stage);

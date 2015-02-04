@@ -43,7 +43,7 @@ public class DefaultListeners {
 			public void keyPressed(KeyEvent e) {
 				switch (GameController.getGameStage()) {
 					case INTRO :
-						GameFactory.changeLoadStageTo(GameLoadStage.MAIN_MENU);
+						GameFactory.changeLoadGameStageTo(GameLoadStage.MAIN_MENU);
 						break;
 					case MAIN_MENU :
 						GameController.stopGame();

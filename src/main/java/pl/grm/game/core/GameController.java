@@ -47,7 +47,7 @@ public class GameController {
 			@Override
 			public void run() {
 				Thread.currentThread().setName("Closing Thread");
-				GameFactory.changeLoadStageTo(GameLoadStage.CLOSING);
+				GameFactory.changeLoadGameStageTo(GameLoadStage.CLOSING);
 				LWJGLEventMulticaster.discharge();
 				instance.setRunning(false);
 				long initTime = System.currentTimeMillis();
